@@ -1,0 +1,4 @@
+interface:
+  display_name: "知识提炼与 Markdown 排版"
+  short_description: "提炼原始内容并排版为高信息密度、易扫描的 Markdown 知识笔记"
+  default_prompt: "使用 $format-knowledge-notes 提炼以下内容，并排版为适合知识库使用的 Markdown 笔记。"
