@@ -18,12 +18,13 @@ node scripts/validate-layout.mjs \
   --pdf /tmp/李明-产品经理-简历-互联网简洁.pdf \
   --name "李明" \
   --role "产品经理" \
+  --style "互联网简洁" \
   --email "liming@example.cn" \
   --phone "13800138000" \
   --preview /tmp/李明-产品经理-简历-互联网简洁.png
 ```
 
-脚本先调用 `scripts/check-output.mjs`，再执行浏览器和 PDF 检查。只验证布局、无需检查模板示例内容时可加 `--skip-content-check`。
+脚本要求 HTML 与 PDF 使用相同基名，先调用 `scripts/check-output.mjs`，再执行浏览器和 PDF 检查。只验证布局、无需检查模板示例内容时可加 `--skip-content-check`。
 
 ## 通过条件
 
@@ -33,6 +34,7 @@ node scripts/validate-layout.mjs \
 - `document.fonts.ready` 在超时前完成，所有声明的字体状态为 loaded。
 - 页面不超过 A4 的 CSS 高宽，关键内容容器没有被 `overflow: hidden/clip` 裁切。
 - header 和所有 `data-section` 都位于 `.resume` 边界内。
+- header 与各 section 至少填充 `.resume` 高度的 85%；目标为 85–95%，高于 95% 时必须重点视觉检查页尾。
 - PDF 恰好 1 页，尺寸约为 595 × 842 pt（A4 纵向）。
 - `pdftotext` 能提取非空正文；提供姓名时，PDF 文本必须包含姓名。
 
@@ -44,6 +46,7 @@ node scripts/validate-layout.mjs \
 |---|---|
 | 字体超时或 error | 检查外部字体、CORS、URL；改用可用字体后重新验证 |
 | 页面高度超过 A4 | 先调字号、行距、区块间距和装饰留白 |
+| 内容填充不足 85% | 在不新增事实的前提下增大字号、行距和区块留白；不要编造内容填空 |
 | 关键容器被裁切 | 删除固定高度或修正 overflow；不要隐藏正文 |
 | PDF 多于 1 页 | 回到纯文本确认稿，按确认流程提出合并/删减方案 |
 | PDF 文本为空/无姓名 | 确认页面真实加载、字体可提取、打印的不是空白页 |

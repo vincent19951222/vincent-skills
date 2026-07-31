@@ -1,6 +1,6 @@
 ---
 name: resume-stylist
-description: 根据用户的岗位方向（产品/研发/职能/设计创意）与目标公司性质（传统/互联网/AI native），生成匹配风格的单页 A4 HTML 简历。当用户要求"做简历"、"换简历风格"、"生成简历页面"时使用。
+description: 根据用户的岗位方向（产品/研发/职能/设计创意）与目标公司性质（传统/互联网/AI native），生成匹配风格的单页 A4 HTML 与 PDF 简历。当用户要求"做简历"、"换简历风格"、"生成简历页面"或"导出简历 PDF"时使用。
 ---
 
 # 简历风格生成器
@@ -72,17 +72,19 @@ description: 根据用户的岗位方向（产品/研发/职能/设计创意）�
 
 ### 第 4 步：生成与验证
 
-1. 读取选定的皮肤 HTML，保持其 CSS 与结构骨架，替换为用户内容
-2. **铁律检查**（详见 `references/skeleton.md`）：
+1. 读取 `references/delivery.md`，确定输出目录和不会覆盖现有文件的共同基名
+2. 读取选定的皮肤 HTML，保持其 CSS 与结构骨架，替换为用户内容
+3. **铁律检查**（详见 `references/skeleton.md`）：
    - 单页 A4，内容填充页面高度 85~95%（不足则放大字号/间距，溢出则压缩）
    - 关键数字用 `<strong>` 包裹
    - 保留 `@page` / `@media print` 规则
-3. 读取 `references/output-check.md`，检查示例数据、元信息、联系方式和链接
-4. 环境有 Node.js 时必须运行：`node scripts/check-output.mjs <HTML> --name <姓名> --role <意向岗位>`；已知邮箱和手机时一并传入。检查失败不得交付
-5. 读取 `references/layout-validation.md`。环境有 Node.js、npx 和 Poppler 时必须运行 `node scripts/validate-layout.mjs <HTML> --pdf <验证PDF> --name <姓名> --role <意向岗位>`
-6. 布局验证必须确认：真实正文非空、字体加载完成、没有横纵溢出或关键容器裁切、PDF 恰好 1 页且为 A4、PDF 文本含候选人姓名
-7. 缺少验证依赖时执行 `references/layout-validation.md` 的人工降级流程，并在交付说明中明确哪些自动检查未运行
-8. 输出为单个自包含 HTML（内联 CSS、无外部 JS），文件名格式：`姓名-意向岗位-简历-风格名.html`
+4. 读取 `references/output-check.md`，检查示例数据、元信息、联系方式和链接
+5. 环境有 Node.js 时必须运行：`node scripts/check-output.mjs <HTML> --name <姓名> --role <意向岗位> --style <风格名>`；已知邮箱和手机时一并传入。检查失败不得交付
+6. 读取 `references/layout-validation.md`。环境有 Node.js、npx 和 Poppler 时运行 `node scripts/validate-layout.mjs <HTML> --pdf <同基名PDF> --name <姓名> --role <意向岗位> --style <风格名> --preview <临时PNG>`；该验证 PDF 通过后直接作为最终 PDF
+7. 布局验证必须确认：真实正文非空、字体加载完成、没有横纵溢出或关键容器裁切、PDF 恰好 1 页且为 A4、PDF 文本含候选人姓名
+8. 默认交付同目录、同基名的自包含 HTML 与已验证 PDF：`姓名-意向岗位-简历-风格名.html/.pdf`。用户明确只要一种格式时按其要求交付
+9. 缺少依赖时不得把未验证 PDF 当成成品；执行人工降级流程并说明缺失项，只有用户明确接受时才降级为仅交付 HTML
+10. 最终回复提供两个文件链接和简短验证摘要；打印设置与版本规则见 `references/delivery.md`
 
 ## 禁止事项
 

@@ -48,6 +48,7 @@ node scripts/check-output.mjs \
   /path/to/李明-产品经理-简历-互联网简洁.html \
   --name "李明" \
   --role "产品经理" \
+  --style "互联网简洁" \
   --email "liming@example.cn" \
   --phone "13800138000"
 ```

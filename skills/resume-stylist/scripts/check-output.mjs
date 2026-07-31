@@ -106,6 +106,8 @@ function checkHtml(html, options) {
   if (!text.includes(options.name)) errors.push(`页面正文未包含姓名“${options.name}”。`);
   if (fileName && !fileName.includes(options.name)) errors.push(`文件名未包含姓名“${options.name}”。`);
   if (options.role && fileName && !fileName.includes(options.role)) errors.push(`文件名未包含意向岗位“${options.role}”。`);
+  if (fileName && !fileName.includes("简历")) errors.push("文件名未包含“简历”。");
+  if (options.style && fileName && !fileName.includes(options.style)) errors.push(`文件名未包含风格名“${options.style}”。`);
 
   const expectedValues = [options.name, options.email, options.phone].filter(Boolean).map((value) => value.toLowerCase());
   for (const value of DEMO_VALUES) {
@@ -158,7 +160,7 @@ function parseCli(argv) {
       options.allowPlaceholders = true;
       continue;
     }
-    if (["--name", "--role", "--email", "--phone"].includes(argument)) {
+    if (["--name", "--role", "--style", "--email", "--phone"].includes(argument)) {
       const value = argv[index + 1];
       if (!value) throw new Error(`${argument} 缺少值。`);
       options[argument.slice(2)] = value;
@@ -167,14 +169,16 @@ function parseCli(argv) {
     }
     throw new Error(`未知参数：${argument}`);
   }
-  if (!fileName || !options.name) throw new Error("用法：check-output.mjs <HTML> --name <姓名> [--role <岗位>] [--email <邮箱>] [--phone <手机>] [--allow-placeholders]");
+  if (!fileName || !options.name || !options.role || !options.style) throw new Error("用法：check-output.mjs <HTML> --name <姓名> --role <岗位> --style <风格名> [--email <邮箱>] [--phone <手机>] [--allow-placeholders]");
   return options;
 }
 
 function selfTest() {
   const valid = `<!doctype html><html lang="zh-CN"><head><title>李明 · 产品经理 · 简历</title><meta name="author" content="李明"><meta name="description" content="李明 · 产品经理简历"></head><body><article class="resume"><h1>李明</h1><a href="mailto:li@example.cn">li@example.cn</a><span>13800138000</span><a href="https://liming.cn">https://liming.cn</a></article></body></html>`;
-  const validResult = checkHtml(valid, { fileName: "李明-产品经理-简历-互联网简洁.html", name: "李明", role: "产品经理", email: "li@example.cn", phone: "13800138000", allowPlaceholders: false });
+  const validResult = checkHtml(valid, { fileName: "李明-产品经理-简历-互联网简洁.html", name: "李明", role: "产品经理", style: "互联网简洁", email: "li@example.cn", phone: "13800138000", allowPlaceholders: false });
   if (validResult.errors.length) throw new Error(`有效样例未通过：${validResult.errors.join("；")}`);
+  const wrongStyleResult = checkHtml(valid, { fileName: "李明-产品经理-简历-经典纸质.html", name: "李明", role: "产品经理", style: "互联网简洁", allowPlaceholders: false });
+  if (!wrongStyleResult.errors.some((error) => error.includes("风格名"))) throw new Error("文件名风格检查没有拦截错误风格名。");
 
   const masked = valid.replace("13800138000", "138****8000");
   const strictMaskedResult = checkHtml(masked, { fileName: "李明-产品经理-简历-互联网简洁.html", name: "李明", role: "产品经理", email: "li@example.cn", allowPlaceholders: false });

@@ -54,7 +54,7 @@ function parseArguments(argv) {
       options.skipContentCheck = true;
       continue;
     }
-    if (["--pdf", "--preview", "--name", "--role", "--email", "--phone"].includes(argument)) {
+    if (["--pdf", "--preview", "--name", "--role", "--style", "--email", "--phone"].includes(argument)) {
       const value = argv[index + 1];
       if (!value) throw new Error(`${argument} 缺少值。`);
       options[argument.slice(2)] = value;
@@ -64,13 +64,17 @@ function parseArguments(argv) {
     throw new Error(`未知参数：${argument}`);
   }
   if (!options.html || !options.pdf) {
-    throw new Error("用法：validate-layout.mjs <HTML> --pdf <PDF> [--name <姓名>] [--role <岗位>] [--email <邮箱>] [--phone <手机>] [--preview <PNG>] [--allow-placeholders] [--skip-content-check]");
+    throw new Error("用法：validate-layout.mjs <HTML> --pdf <PDF> --name <姓名> --role <岗位> --style <风格名> [--email <邮箱>] [--phone <手机>] [--preview <PNG>] [--allow-placeholders] [--skip-content-check]");
   }
-  if (!options.skipContentCheck && !options.name) throw new Error("运行成品内容检查时必须提供 --name；仅验证皮肤布局可使用 --skip-content-check。");
+  if (!options.skipContentCheck && (!options.name || !options.role || !options.style)) throw new Error("运行成品检查时必须提供 --name、--role 和 --style；仅验证皮肤布局可使用 --skip-content-check。");
   options.html = resolve(options.html);
   options.pdf = resolve(options.pdf);
   if (options.preview) options.preview = resolve(options.preview);
   if (!existsSync(options.html) || extname(options.html).toLowerCase() !== ".html") throw new Error(`HTML 文件不存在或扩展名不正确：${options.html}`);
+  if (basename(options.html, extname(options.html)) !== basename(options.pdf, extname(options.pdf))) {
+    throw new Error("HTML 与 PDF 必须使用相同基名。");
+  }
+  if (!options.skipContentCheck && dirname(options.html) !== dirname(options.pdf)) throw new Error("最终 HTML 与 PDF 必须位于同一目录。");
   return options;
 }
 
@@ -110,7 +114,7 @@ function createHtmlServer(html) {
 async function runContentCheck(options) {
   if (options.skipContentCheck) return;
   const args = [join(SCRIPT_DIR, "check-output.mjs"), options.html, "--name", options.name];
-  for (const key of ["role", "email", "phone"]) {
+  for (const key of ["role", "style", "email", "phone"]) {
     if (options[key]) args.push(`--${key}`, options[key]);
   }
   if (options.allowPlaceholders) args.push("--allow-placeholders");
@@ -131,6 +135,9 @@ function buildBrowserCode(pdfPath) {
     const metrics = await page.evaluate(() => {
       const resume = document.querySelector(".resume");
       const resumeRect = resume?.getBoundingClientRect();
+      const contentBlocks = [...document.querySelectorAll(".r-header,[data-section]")];
+      const contentBottom = contentBlocks.length ? Math.max(...contentBlocks.map(element => element.getBoundingClientRect().bottom)) : 0;
+      const contentFillPct = resumeRect?.height ? Math.round((contentBottom - resumeRect.top) / resumeRect.height * 1000) / 10 : 0;
       const criticalSelector = ".resume,.r-section,.r-job,.r-project,.r-summary,.r-bullets";
       const criticalOverflow = [...document.querySelectorAll(criticalSelector)].flatMap(element => {
         const style = getComputedStyle(element);
@@ -163,6 +170,7 @@ function buildBrowserCode(pdfPath) {
         bodyScrollWidth: document.body.scrollWidth,
         documentScrollHeight: document.documentElement.scrollHeight,
         documentScrollWidth: document.documentElement.scrollWidth,
+        contentFillPct,
         criticalOverflow,
         outOfResume,
         pageRules,
@@ -182,6 +190,7 @@ function validateBrowserMetrics(metrics, options) {
   if (!metrics.name) errors.push("页面缺少非空 .r-name。");
   if (options.name && !metrics.name.includes(options.name)) errors.push(`页面姓名“${metrics.name}”与预期“${options.name}”不一致。`);
   if (metrics.bodyTextLength < 50) errors.push(`正文文本过短（${metrics.bodyTextLength}），可能打印了空白页。`);
+  if (metrics.contentFillPct < 85) errors.push(`内容填充率仅 ${metrics.contentFillPct}%，必须达到至少 85%。`);
   if (!metrics.pageRules.some((rule) => /size\s*:\s*a4/i.test(rule))) errors.push("CSS @page 未声明 A4。");
   if (metrics.fontTimedOut) errors.push("等待 document.fonts.ready 超时。");
   if (metrics.fontStatus !== "loaded") errors.push(`document.fonts.status=${metrics.fontStatus}。`);
@@ -262,6 +271,7 @@ async function main() {
     console.log(`PDF: ${options.pdf}`);
     console.log(`Page: ${pdf.pages} × A4 (${pdf.width} × ${pdf.height} pt)`);
     console.log(`Text: ${pdf.textLength} extracted characters`);
+    console.log(`Fill: ${metrics.contentFillPct}% of .resume height`);
     console.log(`Fonts: ${metrics.fontFaces.length || "system-only"} declared face(s), all loaded`);
     if (preview) console.log(`Preview: ${preview}`);
   } finally {
