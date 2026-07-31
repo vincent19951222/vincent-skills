@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陈砚舟 · 简历 · AI 锋锐</title>
+<style>
+  :root{
+    --blue:#1D4ED8;
+    --blue-deep:#1E3A8A;
+    --blue-soft:#EEF3FD;
+    --ink:#111827;
+    --gray:#4B5563;
+    --faint:#8A94A6;
+    --line:#E3E8F0;
+    --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{
+    background:#EDF0F5;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    color:var(--ink);
+    font-size:10pt;
+    line-height:1.55;
+    padding:24px 0;
+  }
+
+  /* ====== 纸张容器 ====== */
+  .resume{
+    width:210mm;
+    min-height:297mm;
+    margin:0 auto;
+    background:#FFFFFF;
+    box-shadow:0 8px 32px rgba(17,24,39,.10);
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ====== Header 深蓝色带 ====== */
+  .r-header{
+    background:var(--blue-deep);
+    color:#FFFFFF;
+    padding:6mm 12mm 5mm;
+  }
+  .r-header-top{
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:4px 16px;
+  }
+  .r-name{
+    font-size:26pt;
+    font-weight:800;
+    letter-spacing:3px;
+    line-height:1.12;
+  }
+  .r-title{
+    font-size:11pt;
+    font-weight:600;
+    color:#BFD3FF;
+    letter-spacing:1px;
+  }
+  .r-title::before{
+    content:"";
+    display:inline-block;
+    width:22px;height:2px;
+    background:#6E96FF;
+    vertical-align:middle;
+    margin-right:8px;
+    transform:translateY(-3px);
+  }
+  .r-contacts{
+    list-style:none;
+    display:flex;
+    flex-wrap:wrap;
+    gap:3px 0;
+    margin-top:3mm;
+    font-size:9pt;
+    color:#DCE6FF;
+  }
+  .r-contact{display:flex;align-items:center;}
+  .r-contact + .r-contact::before{
+    content:"";
+    width:1px;height:10px;
+    background:rgba(255,255,255,.35);
+    margin:0 12px;
+  }
+
+  /* ====== 正文容器 ====== */
+  .r-body{padding:5mm 12mm 6mm;flex:1;}
+
+  /* ====== Section 通用 ====== */
+  .r-section{margin-bottom:3.5mm;}
+  .r-section:last-child{margin-bottom:0;}
+  .r-section-title{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    font-size:12pt;
+    font-weight:800;
+    letter-spacing:1px;
+    color:var(--ink);
+    margin-bottom:2.2mm;
+  }
+  .r-section-title::before{
+    content:attr(data-num);
+    font-family:var(--mono);
+    font-size:10pt;
+    font-weight:700;
+    color:var(--blue);
+    letter-spacing:0;
+    transform:translateY(-1px);
+  }
+  .r-section-title::after{
+    content:"";
+    flex:1;
+    border-top:1px solid var(--line);
+    transform:translateY(-4px);
+  }
+
+  /* ====== Summary ====== */
+  .r-summary{
+    font-size:10pt;
+    color:var(--gray);
+    line-height:1.6;
+    text-align:justify;
+  }
+  .r-summary strong{color:var(--blue-deep);font-weight:700;}
+
+  /* ====== 工作经历 ====== */
+  .r-job{margin-bottom:3mm;}
+  .r-job:last-child{margin-bottom:0;}
+  .r-job-head{
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:3px 10px;
+  }
+  .r-job-company{
+    font-size:11.5pt;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .r-job-role{
+    font-size:10pt;
+    font-weight:700;
+    color:var(--blue);
+  }
+  .r-job-period{
+    margin-left:auto;
+    font-family:var(--mono);
+    font-size:9pt;
+    color:var(--faint);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  .r-job-desc{
+    font-size:9pt;
+    color:var(--faint);
+    margin:1px 0 1.5mm;
+  }
+  .r-bullets{list-style:none;}
+  .r-bullet{
+    position:relative;
+    font-size:10pt;
+    color:var(--gray);
+    padding-left:15px;
+    margin-bottom:.8mm;
+    line-height:1.55;
+  }
+  .r-bullet:last-child{margin-bottom:0;}
+  .r-bullet::before{
+    content:"";
+    position:absolute;
+    left:2px;top:.68em;
+    width:5px;height:5px;
+    background:var(--blue);
+  }
+  .r-bullet strong{color:var(--blue-deep);font-weight:700;}
+
+  /* ====== 双栏区（项目 + 技能/教育/证书） ====== */
+  .r-cols{
+    display:grid;
+    grid-template-columns:1.15fr 1fr;
+    gap:8mm;
+    align-items:start;
+  }
+  .r-cols .r-section{margin-bottom:0;}
+
+  .r-project{margin-bottom:2.5mm;}
+  .r-project:last-child{margin-bottom:0;}
+  .r-project-head{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:1px;
+  }
+  .r-project-name{font-size:11pt;font-weight:800;color:var(--ink);}
+  .r-project-tag{
+    font-size:8pt;
+    font-weight:600;
+    color:var(--blue);
+    background:var(--blue-soft);
+    border-radius:3px;
+    padding:1px 7px;
+  }
+  .r-project p{font-size:9.5pt;color:var(--gray);line-height:1.55;}
+  .r-project strong{font-weight:700;color:var(--blue-deep);}
+
+  /* ====== 技能 ====== */
+  .r-skill-group{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px;
+    align-items:center;
+    margin-bottom:2mm;
+  }
+  .r-skill-group:last-child{margin-bottom:0;}
+  .r-skill-label{
+    font-size:9.5pt;
+    font-weight:800;
+    color:var(--ink);
+    margin-right:4px;
+  }
+  .r-skill-label::after{
+    content:"";
+    display:inline-block;
+    width:3px;height:3px;
+    background:var(--blue);
+    margin-left:8px;
+    vertical-align:middle;
+    transform:translateY(-1px);
+  }
+  .r-skill-item{
+    font-size:9pt;
+    color:var(--gray);
+    background:var(--blue-soft);
+    border-radius:3px;
+    padding:1px 8px;
+  }
+
+  /* ====== 教育 & 证书 ====== */
+  .r-edu,.r-extra{
+    font-size:9.5pt;
+    color:var(--gray);
+    line-height:1.6;
+  }
+  .r-edu strong,.r-extra strong{color:var(--ink);font-weight:700;}
+  .r-edu-period{
+    float:right;
+    font-family:var(--mono);
+    font-size:9pt;
+    color:var(--faint);
+  }
+
+  /* ====== 打印 ====== */
+  @page{size:A4;margin:0;}
+  @media print{
+    body{background:#fff;padding:0;}
+    .resume{box-shadow:none;width:210mm;min-height:297mm;}
+    .r-section,.r-job{page-break-inside:avoid;}
+  }
+  @media screen and (max-width:860px){
+    body{padding:0;}
+    .resume{width:100%;}
+    .r-cols{grid-template-columns:1fr;gap:5mm;}
+    .r-cols .r-section{margin-bottom:5mm;}
+  }
+</style>
+</head>
+<body>
+
+<article class="resume">
+
+  <header class="r-header">
+    <div class="r-header-top">
+      <h1 class="r-name">陈砚舟</h1>
+      <p class="r-title">求职意向：AI 产品经理</p>
+    </div>
+    <ul class="r-contacts">
+      <li class="r-contact" data-type="phone">138-****-7261</li>
+      <li class="r-contact" data-type="email">chenyanzhou@example.com</li>
+      <li class="r-contact" data-type="city">上海 · 可远程</li>
+      <li class="r-contact" data-type="site">chenyanzhou.dev</li>
+      <li class="r-contact" data-type="github">github.com/yanzhou-chen</li>
+    </ul>
+  </header>
+
+  <div class="r-body">
+
+    <section class="r-section" data-section="summary">
+      <h2 class="r-section-title" data-num="01">职业摘要</h2>
+      <p class="r-summary"><strong>5 年</strong>互联网产品经验，其中 <strong>3 年</strong>专注 AI 产品。主导过从 <strong>0 到 1</strong> 的 AI 对话产品与搜索产品，擅长将大模型能力转化为可衡量的业务指标。技术背景出身（软件工程本科 + 2 年后端开发），能与工程团队无损沟通；带领 <strong>4 人</strong>产品小组，协调 <strong>22 人</strong>跨职能团队。开源社区活跃贡献者。</p>
+    </section>
+
+    <section class="r-section" data-section="experience">
+      <h2 class="r-section-title" data-num="02">工作经历</h2>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">星澜科技</h3>
+          <span class="r-job-role">高级 AI 产品经理</span>
+          <span class="r-job-period">2023.04 – 至今</span>
+        </div>
+        <p class="r-job-desc">AI 原生协作工具公司（B 轮，200 人）· 负责核心产品「星澜 Copilot」产品线</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">主导「星澜 Copilot」从 0 到 1 上线，6 个月内 <strong>DAU 达 12 万</strong>，次月留存 <strong>41%</strong>，超出公司 OKR 目标 35%</li>
+          <li class="r-bullet">设计多轮对话上下文压缩策略，单次会话平均 token 成本降低 <strong>58%</strong>，年节省推理成本约 <strong>400 万元</strong></li>
+          <li class="r-bullet">推动 RAG 知识库功能落地，企业客户付费转化率从 8% 提升至 <strong>19%</strong>，ARR 增长 <strong>2,300 万元</strong></li>
+          <li class="r-bullet">建立 AI 产品三层评估体系（离线索引 + 在线 A/B + 人工抽检），bad case 响应周期从 <strong>2 周缩短至 2 天</strong></li>
+          <li class="r-bullet">带领 4 人产品小组，协调算法、工程、设计共 <strong>22 人</strong>虚拟团队；建立双周用户访谈机制，累计访谈 <strong>60+</strong> 企业客户</li>
+        </ul>
+      </div>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">蓝鲸互娱</h3>
+          <span class="r-job-role">产品经理</span>
+          <span class="r-job-period">2021.06 – 2023.03</span>
+        </div>
+        <p class="r-job-desc">中型互联网公司（2,000 人）· 内容社区赛道，负责搜索与推荐策略产品</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">重构搜索 Query 理解与排序策略，搜索渗透率从 23% 提升至 <strong>35%</strong>，搜索后点击率提升 <strong>27%</strong></li>
+          <li class="r-bullet">设计创作者冷启动流量扶持策略，新创作者 30 日留存提升 <strong>18%</strong>，月均新增万粉创作者 <strong>40 → 110 人</strong></li>
+          <li class="r-bullet">搭建策略产品数据看板与实验平台规范，A/B 实验上线周期从 <strong>3 周缩短至 1 周</strong></li>
+          <li class="r-bullet">主导跨部门「内容生态健康度」专项，联合制定 12 项生态指标，低质内容曝光占比下降 <strong>40%</strong></li>
+        </ul>
+      </div>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">云帆软件</h3>
+          <span class="r-job-role">后端工程师</span>
+          <span class="r-job-period">2019.07 – 2021.05</span>
+        </div>
+        <p class="r-job-desc">企业级 SaaS 公司 · 订单中台团队（Java / Go）</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">负责订单履约系统服务化拆分（单体 → <strong>6 个微服务</strong>），大促系统可用性 99.5% 提升至 <strong>99.95%</strong>；分布式库存方案支撑日均 <strong>300 万</strong>订单峰值</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="r-cols">
+      <div>
+        <section class="r-section" data-section="projects" style="margin-bottom:4mm;">
+          <h2 class="r-section-title" data-num="03">项目</h2>
+          <div class="r-project">
+            <div class="r-project-head">
+              <span class="r-project-name">llm-eval-kit</span>
+              <span class="r-project-tag">开源 · Star 1.2k</span>
+            </div>
+            <p>独立开发的大模型评估工具包，支持自定义评估集、多模型对比与回归测试；被 <strong>3 家</strong> AI 创业公司采用为内部评估基础设施，收到 <strong>40+</strong> PR。</p>
+          </div>
+          <div class="r-project">
+            <div class="r-project-head">
+              <span class="r-project-name">「巷口」Newsletter</span>
+              <span class="r-project-tag">订阅 8,000+</span>
+            </div>
+            <p>主理 AI 产品观察 Newsletter，平均打开率 <strong>45%</strong>；累计采访 <strong>20+</strong> AI 创业者，3 篇访谈被行业媒体转载。</p>
+          </div>
+          <div class="r-project">
+            <div class="r-project-head">
+              <span class="r-project-name">黑客松一等奖</span>
+              <span class="r-project-tag">SegmentFault 2024</span>
+            </div>
+            <p>48 小时开发「会议纪要自动拆解为任务」工具，评委评分第一。</p>
+          </div>
+        </section>
+
+        <section class="r-section" data-section="education">
+          <h2 class="r-section-title" data-num="05">教育</h2>
+          <div class="r-edu">
+            <span class="r-edu-period">2015 – 2019</span>
+            <strong>华东理工大学</strong> · 软件工程 · 本科<br>
+            GPA 3.6/4.0（专业前 10%）· ACM 集训队 · 蓝桥杯全国二等奖 · 校级优秀毕设
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <section class="r-section" data-section="skills" style="margin-bottom:4mm;">
+          <h2 class="r-section-title" data-num="04">技能</h2>
+          <div class="r-skill-group">
+            <span class="r-skill-label">产品</span>
+            <span class="r-skill-item">用户研究</span>
+            <span class="r-skill-item">A/B 实验设计</span>
+            <span class="r-skill-item">PRD / Figma</span>
+            <span class="r-skill-item">SQL 取数</span>
+            <span class="r-skill-item">Roadmap 规划</span>
+          </div>
+          <div class="r-skill-group">
+            <span class="r-skill-label">AI</span>
+            <span class="r-skill-item">Prompt Engineering</span>
+            <span class="r-skill-item">RAG 架构</span>
+            <span class="r-skill-item">LLM 评估方法</span>
+            <span class="r-skill-item">Agent 框架</span>
+          </div>
+          <div class="r-skill-group">
+            <span class="r-skill-label">技术</span>
+            <span class="r-skill-item">Python</span>
+            <span class="r-skill-item">Java / Go</span>
+            <span class="r-skill-item">微调基础</span>
+          </div>
+          <div class="r-skill-group">
+            <span class="r-skill-label">语言</span>
+            <span class="r-skill-item">中文（母语）</span>
+            <span class="r-skill-item">英语流利 · CET-6 590</span>
+          </div>
+        </section>
+
+        <section class="r-section" data-section="extras">
+          <h2 class="r-section-title" data-num="06">证书与其他</h2>
+          <div class="r-extra">
+            <strong>PMP</strong> 项目管理认证（2022）<br>
+            公司年度「最佳产品奖」（2024）<br>
+            业余：半程马拉松（PB 1:58）· 胶片摄影
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+
+</article>
+
+</body>
+</html>

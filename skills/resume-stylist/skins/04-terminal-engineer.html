@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>陈砚舟 · 简历 · 工程师终端</title>
+  <style>
+    :root {
+      --paper: #f7f8f3;
+      --paper-deep: #eef3eb;
+      --ink: #151a17;
+      --muted: #5c665f;
+      --green: #087a42;
+      --green-bright: #0a9a52;
+      --green-pale: #e6f2e9;
+      --line: #a9baad;
+      --line-soft: #d7e1d8;
+      --white: #ffffff;
+    }
+
+    /*
+      Fusion Pixel Font 12px proportional zh-Hans, title glyph subset.
+      Source: https://github.com/TakWolf/fusion-pixel-font
+      License: SIL Open Font License 1.1
+    */
+    @font-face {
+      font-family: "FusionPixel";
+      src: url("data:font/woff2;base64,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") format("woff2");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #dfe5df;
+      color: var(--ink);
+      font-family: "SFMono-Regular", "Cascadia Mono", "JetBrains Mono", Menlo,
+        Monaco, "PingFang SC", "Microsoft YaHei", monospace;
+      -webkit-font-smoothing: antialiased;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    body { padding: 18px 0 44px; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .resume {
+      position: relative;
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: 9mm 12mm 8mm;
+      overflow: hidden;
+      background-color: var(--paper);
+      box-shadow: 0 18px 48px rgba(28, 43, 33, 0.14);
+    }
+
+    .scanline {
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(8, 122, 66, 0.018) 0,
+        rgba(8, 122, 66, 0.018) 0.35mm,
+        transparent 0.35mm,
+        transparent 1.4mm
+      );
+    }
+
+    .resume::after {
+      content: "";
+      position: absolute;
+      inset: 4mm;
+      border: 0.25mm solid rgba(8, 122, 66, 0.18);
+      pointer-events: none;
+    }
+
+    /* ---------- system bar ---------- */
+    .system-bar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 4mm;
+      padding-bottom: 2.4mm;
+      border-bottom: 0.35mm solid var(--ink);
+      font-size: 8pt;
+      letter-spacing: 0.02em;
+    }
+    .terminal-dots { display: flex; gap: 2.2mm; }
+    .terminal-dots i {
+      display: block;
+      width: 2.8mm;
+      height: 2.8mm;
+      background: var(--green-bright);
+      border-radius: 50%;
+      box-shadow: inset 0 -0.4mm 0 rgba(0, 0, 0, 0.14);
+    }
+    .terminal-dots i:nth-child(2) { opacity: 0.55; }
+    .terminal-dots i:nth-child(3) { opacity: 0.3; }
+    .system-name { font-weight: 700; }
+    .system-page { color: var(--muted); text-align: right; }
+
+    .command {
+      display: flex;
+      align-items: baseline;
+      gap: 2.4mm;
+      margin: 3mm 0 0;
+      color: var(--muted);
+      font-size: 8pt;
+    }
+    .prompt { color: var(--green); font-weight: 900; }
+    .cursor {
+      display: inline-block;
+      width: 2mm;
+      height: 3.4mm;
+      margin-left: 1mm;
+      background: var(--green);
+      vertical-align: -0.5mm;
+    }
+
+    /* ---------- header ---------- */
+    .r-header { padding: 3.3mm 0 2.7mm; border-bottom: 0.35mm solid var(--line); }
+
+    .r-name-en {
+      font-family: "FusionPixel", "SFMono-Regular", monospace;
+      color: var(--green-bright);
+      font-size: 12pt;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-synthesis: none;
+    }
+
+    .r-name-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6mm;
+      margin-top: 2mm;
+    }
+
+    .r-name {
+      margin: 0;
+      font-family: "FusionPixel", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 21.5pt;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.1em;
+      font-synthesis: none;
+    }
+
+    .r-title {
+      margin: 0;
+      color: var(--green);
+      font-size: 9.4pt;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .r-title::before { content: "> "; font-weight: 900; }
+
+    .r-tag-row { display: flex; gap: 2.6mm; margin-top: 2.6mm; }
+    .r-tag {
+      padding: 1mm 2.8mm 1.1mm;
+      border: 0.3mm solid var(--green);
+      color: var(--green);
+      font-size: 7pt;
+      line-height: 1;
+      background: rgba(255, 255, 255, 0.36);
+    }
+
+    .r-contacts {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      justify-content: space-between;
+      gap: 2mm 3mm;
+      margin: 2.7mm 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 6.8pt;
+    }
+    .r-contact { white-space: nowrap; }
+    .r-contact::before {
+      content: attr(data-type) ":";
+      margin-right: 1.6mm;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .r-contact a:hover { color: var(--green); }
+
+    /* ---------- sections ---------- */
+    .r-section { padding-top: 2.7mm; }
+    .r-section + .r-section { margin-top: 1.2mm; border-top: 0.25mm solid var(--line-soft); }
+
+    .r-section-kicker {
+      color: var(--green);
+      font-family: "SFMono-Regular", Menlo, monospace;
+      font-size: 7.3pt;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .r-section-title {
+      display: flex;
+      align-items: baseline;
+      gap: 3mm;
+      margin: 0 0 1.9mm;
+      font-family: "FusionPixel", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 12pt;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      font-synthesis: none;
+    }
+    .r-section-title small {
+      color: var(--muted);
+      font-family: "SFMono-Regular", Menlo, monospace;
+      font-size: 7.3pt;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+
+    .r-summary {
+      margin: 0;
+      color: #343c37;
+      font-size: 7.9pt;
+      line-height: 1.62;
+    }
+    .r-summary strong { color: var(--green); }
+
+    /* ---------- jobs ---------- */
+    .r-job { padding: 1.6mm 0 1.8mm; }
+    .r-job + .r-job { border-top: 0.25mm dashed var(--line); }
+
+    .r-job-head {
+      display: flex;
+      align-items: baseline;
+      gap: 3mm;
+    }
+    .r-job-company {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 9.4pt;
+      font-weight: 730;
+    }
+    .r-job-role { color: var(--green); font-size: 7.7pt; font-weight: 800; }
+    .r-job-period {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 7.5pt;
+      white-space: nowrap;
+    }
+
+    .r-job-desc {
+      margin: 1mm 0 0;
+      color: var(--muted);
+      font-size: 7.3pt;
+      line-height: 1.5;
+    }
+    .r-job-desc::before { content: "// "; color: var(--green); font-weight: 700; }
+
+    .r-bullets {
+      margin: 1.2mm 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .r-bullet {
+      position: relative;
+      margin-top: 0.9mm;
+      padding-left: 4mm;
+      color: #3f4942;
+      font-size: 7.5pt;
+      line-height: 1.5;
+    }
+    .r-bullet::before {
+      content: "*";
+      position: absolute;
+      left: 0.6mm;
+      color: var(--green);
+      font-weight: 900;
+    }
+    .r-bullet strong { color: var(--green); font-weight: 800; }
+
+    .r-job.feature .r-job-company::before {
+      content: "[main] ";
+      color: var(--green-bright);
+      font-family: "SFMono-Regular", Menlo, monospace;
+      font-size: 7.3pt;
+      font-weight: 700;
+    }
+
+    /* ---------- skills ---------- */
+    .r-skill-group {
+      display: grid;
+      grid-template-columns: 24mm 1fr;
+      align-items: baseline;
+      gap: 3mm;
+      padding: 0.9mm 0;
+    }
+    .r-skill-group + .r-skill-group { border-top: 0.25mm dashed var(--line-soft); }
+    .r-skill-label {
+      color: var(--green);
+      font-size: 7.7pt;
+      font-weight: 800;
+    }
+    .r-skill-label::after { content: " =>"; color: var(--muted); font-weight: 400; }
+    .r-skill-items { font-size: 7.6pt; line-height: 1.5; color: #3f4942; }
+    .r-skill-item { white-space: nowrap; }
+    .r-skill-item + .r-skill-item::before {
+      content: " · ";
+      color: var(--line);
+    }
+
+    /* ---------- education / extras ---------- */
+    .r-edu {
+      display: flex;
+      align-items: baseline;
+      gap: 3mm;
+      font-size: 8.1pt;
+    }
+    .r-edu strong { font-size: 8.7pt; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .r-edu .r-edu-period { margin-left: auto; color: var(--muted); font-size: 7.5pt; white-space: nowrap; }
+    .r-edu-detail { margin: 1mm 0 0; color: var(--muted); font-size: 7.5pt; line-height: 1.6; }
+
+    .r-extras {
+      margin: 0;
+      color: #3f4942;
+      font-size: 7.6pt;
+      line-height: 1.65;
+    }
+    .r-extras strong { color: var(--green); font-weight: 800; }
+
+    /* ---------- footer ---------- */
+    .footer-line {
+      position: absolute;
+      left: 13mm;
+      right: 13mm;
+      bottom: 6mm;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 2.4mm;
+      border-top: 0.35mm solid var(--ink);
+      color: var(--muted);
+      font-size: 6.8pt;
+    }
+    .footer-line .prompt { margin-right: 1.6mm; }
+
+    @page { size: A4; margin: 0; }
+
+    @media print {
+      html, body { background: transparent; }
+      body { padding: 0; }
+      .resume { margin: 0; box-shadow: none; }
+    }
+
+    @media screen and (max-width: 760px) {
+      body { padding: 0; background: var(--paper); }
+      .resume {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        margin: 0;
+        padding: 24px 22px 56px;
+        box-shadow: none;
+        overflow: visible;
+      }
+      .r-name-row { flex-direction: column; gap: 2mm; }
+      .r-contacts { grid-template-columns: 1fr 1fr; justify-content: start; }
+      .r-job-head { flex-wrap: wrap; }
+      .r-job-period { margin-left: 0; width: 100%; }
+      .r-skill-group { grid-template-columns: 1fr; gap: 1mm; }
+      .footer-line { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <article class="resume scanline">
+    <div class="system-bar" aria-hidden="true">
+      <div class="terminal-dots"><i></i><i></i><i></i></div>
+      <div class="system-name">YANZHOU.CHEN / BACKEND_OS</div>
+      <div class="system-page">resume.html — 1 page, utf-8</div>
+    </div>
+
+    <div class="command"><span class="prompt">$</span><span>whoami --role backend --with product-sense</span><span class="cursor"></span></div>
+
+    <header class="r-header">
+      <div class="r-name-en">Chen Yanzhou</div>
+      <div class="r-name-row">
+        <h1 class="r-name">陈砚舟</h1>
+        <p class="r-title">后端工程师 / 工程师（有产品 sense）</p>
+      </div>
+      <ul class="r-contacts">
+        <li class="r-contact" data-type="phone">138-****-7261</li>
+        <li class="r-contact" data-type="email"><a href="mailto:chenyanzhou@example.com">chenyanzhou@example.com</a></li>
+        <li class="r-contact" data-type="city">上海 · 可远程</li>
+        <li class="r-contact" data-type="site"><a href="https://chenyanzhou.dev">chenyanzhou.dev</a></li>
+        <li class="r-contact" data-type="github"><a href="https://github.com/yanzhou-chen">github.com/yanzhou-chen</a></li>
+      </ul>
+    </header>
+
+    <section class="r-section" data-section="summary">
+      <h2 class="r-section-title"><span class="r-section-kicker">// 01 · profile</span>职业摘要 <small>cat ./summary.txt</small></h2>
+      <p class="r-summary">软件工程本科出身，<strong>2 年后端开发</strong> + 3 年 AI 产品技术经验。从 0 到 1 搭建过支撑<strong>日均 300 万订单</strong>的微服务系统，也主导过 LLM 推理成本优化与评估 pipeline 的工程落地；习惯用工程手段解决业务问题，能写代码也能讲清楚价值。开源项目 llm-eval-kit 作者（GitHub <strong>Star 1.2k</strong>）。</p>
+    </section>
+
+    <section class="r-section" data-section="experience">
+      <h2 class="r-section-title"><span class="r-section-kicker">// 02 · work experience</span>工作经历 <small>git log --reverse=false</small></h2>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">星澜科技</h3>
+          <span class="r-job-role">高级 AI 产品经理（技术方向）</span>
+          <span class="r-job-period">2023.04 – 至今</span>
+        </div>
+        <p class="r-job-desc">AI 原生协作工具公司（B 轮，200 人），负责「星澜 Copilot」产品线的技术与成本优化。</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">设计多轮对话上下文压缩策略（Prompt 工程 + 推理成本结构优化），单次会话平均 token 成本降低 <strong>58%</strong>，年节省推理成本约 <strong>400 万元</strong></li>
+          <li class="r-bullet">用 Python 搭建三层 AI 评估 pipeline（离线索引 + 在线 A/B + 人工抽检），bad case 响应周期从 <strong>2 周缩短至 2 天</strong></li>
+          <li class="r-bullet">推动 RAG 知识库功能工程落地，企业客户付费转化率从 <strong>8% 提升至 19%</strong>，ARR 增长 <strong>2,300 万元</strong></li>
+        </ul>
+      </div>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">蓝鲸互娱</h3>
+          <span class="r-job-role">产品经理（搜索与推荐策略）</span>
+          <span class="r-job-period">2021.06 – 2023.03</span>
+        </div>
+        <p class="r-job-desc">中型互联网公司（2,000 人），内容社区赛道，负责搜索与推荐策略的技术方案。</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">重构搜索 Query 理解与排序策略，搜索渗透率从 <strong>23% 提升至 35%</strong>，搜索后点击率提升 <strong>27%</strong></li>
+          <li class="r-bullet">搭建策略数据看板与实验平台规范，A/B 实验上线周期从 <strong>3 周缩短至 1 周</strong></li>
+        </ul>
+      </div>
+
+      <div class="r-job feature">
+        <div class="r-job-head">
+          <h3 class="r-job-company">云帆软件</h3>
+          <span class="r-job-role">后端工程师 · 订单中台</span>
+          <span class="r-job-period">2019.07 – 2021.05</span>
+        </div>
+        <p class="r-job-desc">企业级 SaaS 公司，订单中台团队，Java / Go 技术栈。</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">主导订单履约系统服务化拆分，单体应用拆分为 <strong>6 个微服务</strong>，大促期间系统可用性从 <strong>99.5% 提升至 99.95%</strong></li>
+          <li class="r-bullet">设计并实现分布式库存扣减方案（Redis + 消息队列最终一致性），支撑日均 <strong>300 万订单</strong>峰值</li>
+          <li class="r-bullet">主导接口性能优化专项，核心链路 P99 延迟从 <strong>800ms 降至 120ms</strong></li>
+          <li class="r-bullet">编写团队《服务拆分规范》与 Code Review 清单，带教 <strong>2 名</strong>应届工程师</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="r-section" data-section="projects">
+      <h2 class="r-section-title"><span class="r-section-kicker">// 03 · open source &amp; projects</span>开源与项目 <small>ls ~/projects</small></h2>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">llm-eval-kit</h3>
+          <span class="r-job-role">独立开发 · GitHub Star 1.2k</span>
+          <span class="r-job-period">Python / LLM Eval</span>
+        </div>
+        <ul class="r-bullets">
+          <li class="r-bullet">独立开发的大模型评估工具包，支持自定义评估集、多模型对比与回归测试</li>
+          <li class="r-bullet">被 <strong>3 家</strong> AI 创业公司采用为内部评估基础设施，累计收到 <strong>40+ PR</strong> 社区贡献</li>
+        </ul>
+      </div>
+
+      <div class="r-job">
+        <div class="r-job-head">
+          <h3 class="r-job-company">hackday-winner</h3>
+          <span class="r-job-role">SegmentFault 黑客松一等奖（2024）</span>
+          <span class="r-job-period">48h build</span>
+        </div>
+        <ul class="r-bullets">
+          <li class="r-bullet">48 小时开发「会议纪要自动拆解为任务」工具，评委评分<strong>第一</strong></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="r-section" data-section="skills">
+      <h2 class="r-section-title"><span class="r-section-kicker">// 04 · skills</span>技术栈 <small>cat ~/.skills</small></h2>
+      <div class="r-skill-group">
+        <span class="r-skill-label">语言</span>
+        <span class="r-skill-items"><span class="r-skill-item">Java</span><span class="r-skill-item">Go</span><span class="r-skill-item">Python</span><span class="r-skill-item">SQL</span></span>
+      </div>
+      <div class="r-skill-group">
+        <span class="r-skill-label">框架与中间件</span>
+        <span class="r-skill-items"><span class="r-skill-item">微服务架构</span><span class="r-skill-item">Redis</span><span class="r-skill-item">Kafka</span><span class="r-skill-item">MySQL</span></span>
+      </div>
+      <div class="r-skill-group">
+        <span class="r-skill-label">基础设施</span>
+        <span class="r-skill-items"><span class="r-skill-item">Docker</span><span class="r-skill-item">Kubernetes</span><span class="r-skill-item">Linux</span><span class="r-skill-item">CI/CD</span></span>
+      </div>
+      <div class="r-skill-group">
+        <span class="r-skill-label">AI 工程</span>
+        <span class="r-skill-items"><span class="r-skill-item">Prompt Engineering</span><span class="r-skill-item">RAG 架构</span><span class="r-skill-item">LLM 评估方法</span><span class="r-skill-item">了解微调与 Agent 框架</span></span>
+      </div>
+      <div class="r-skill-group">
+        <span class="r-skill-label">语言 / 其他</span>
+        <span class="r-skill-items"><span class="r-skill-item">中文（母语）</span><span class="r-skill-item">英语流利（CET-6 590，可全英文会议）</span><span class="r-skill-item">半马 PB 1:58</span><span class="r-skill-item">胶片摄影</span></span>
+      </div>
+    </section>
+
+    <section class="r-section" data-section="education">
+      <h2 class="r-section-title"><span class="r-section-kicker">// 05 · education</span>教育背景 <small>git blame origin</small></h2>
+      <div class="r-edu">
+        <strong>华东理工大学</strong>
+        <span>软件工程 · 本科</span>
+        <span class="r-edu-period">2015 – 2019</span>
+      </div>
+      <p class="r-edu-detail">GPA 3.6/4.0（专业前 10%）· 校级 ACM 集训队成员，蓝桥杯全国二等奖 · 校级优秀毕设（协同过滤校园二手书推荐系统）</p>
+    </section>
+
+
+    <div class="footer-line"><span><span class="prompt">$</span>exit 0</span><span>陈砚舟 · 后端工程师 · EOF</span></div>
+  </article>
+</body>
+</html>

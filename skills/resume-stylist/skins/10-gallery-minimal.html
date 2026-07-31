@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沈亦楠 · 简历 · 画廊极简</title>
+<style>
+  :root{
+    --ink:#18181B;
+    --soft:#52525B;
+    --faint:#A1A1AA;
+    --line:#E9E9EC;
+    --sans:"Avenir Next","Futura","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{
+    background:#F1F1F2;
+    font-family:var(--sans);
+    color:var(--ink);
+    font-size:10pt;
+    font-weight:400;
+    line-height:1.7;
+    padding:24px 0;
+  }
+
+  /* ====== 纸张容器 ====== */
+  .resume{
+    width:210mm;
+    min-height:297mm;
+    margin:0 auto;
+    background:#FFFFFF;
+    box-shadow:0 8px 32px rgba(24,24,27,.08);
+    padding:10mm 16mm 5mm;
+  }
+
+  /* ====== Header：轻字重大名 + 大量留白 ====== */
+  .r-header{margin-bottom:5mm;}
+  .r-name{
+    font-size:26pt;
+    font-weight:300;
+    letter-spacing:9px;
+    line-height:1.15;
+  }
+  .r-title{
+    margin-top:2.5mm;
+    font-size:9.5pt;
+    font-weight:400;
+    letter-spacing:5px;
+    color:var(--faint);
+  }
+  .r-contacts{
+    list-style:none;
+    margin-top:4mm;
+    padding-top:3mm;
+    border-top:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    gap:2px 26px;
+    font-size:8pt;
+    letter-spacing:1px;
+    color:var(--soft);
+  }
+  /* 作品集链接：设计师简历的黄金位，用墨色加深而非彩色 */
+  .r-contact[data-type="site"]{color:var(--ink);font-weight:600;}
+
+  /* ====== Section：小字距拉开标签 + 通栏发丝线 ====== */
+  .r-section{margin-bottom:4.5mm;}
+  .r-section:last-child{margin-bottom:0;}
+  .r-section-title{
+    font-size:8.5pt;
+    font-weight:600;
+    letter-spacing:4px;
+    color:var(--faint);
+    padding-bottom:1.5mm;
+    border-bottom:1px solid var(--line);
+    margin-bottom:2.8mm;
+  }
+
+  /* ====== 展签式条目：左时间栏 + 右内容 ====== */
+  .r-job,.r-project{
+    display:grid;
+    grid-template-columns:30mm 1fr;
+    gap:0 8mm;
+    margin-bottom:3mm;
+  }
+  .r-job:last-child,.r-project:last-child{margin-bottom:0;}
+  .r-job-period{
+    font-size:8pt;
+    color:var(--faint);
+    letter-spacing:1px;
+    font-variant-numeric:tabular-nums;
+    padding-top:2px;
+    line-height:1.6;
+  }
+  .r-job-main{min-width:0;}
+  .r-job-head{
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:3px 10px;
+  }
+  .r-job-company{
+    font-size:11.5pt;
+    font-weight:600;
+    letter-spacing:1px;
+  }
+  .r-job-role{
+    font-size:9.5pt;
+    font-weight:400;
+    color:var(--soft);
+    letter-spacing:1px;
+  }
+  .r-job-desc{
+    font-size:8pt;
+    color:var(--faint);
+    letter-spacing:.5px;
+    margin:1px 0 2mm;
+  }
+  .r-bullets{list-style:none;}
+  .r-bullet{
+    position:relative;
+    font-size:9.5pt;
+    color:var(--soft);
+    padding-left:14px;
+    margin-bottom:1mm;
+    line-height:1.65;
+  }
+  .r-bullet:last-child{margin-bottom:0;}
+  .r-bullet::before{
+    content:"";
+    position:absolute;
+    left:1px;top:.82em;
+    width:6px;height:1px;
+    background:var(--faint);
+  }
+  .r-bullet strong{color:var(--ink);font-weight:600;}
+
+  /* ====== 项目（同展签结构） ====== */
+  .r-project-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:1px;
+  }
+  .r-project-name{font-size:10.5pt;font-weight:600;letter-spacing:1px;}
+  .r-project-tag{
+    font-size:8pt;
+    color:var(--faint);
+    letter-spacing:1px;
+  }
+  .r-project p{font-size:9pt;color:var(--soft);line-height:1.7;}
+  .r-project strong{color:var(--ink);font-weight:600;}
+
+  /* ====== Summary ====== */
+  .r-summary{
+    font-size:9.5pt;
+    color:var(--soft);
+    line-height:1.7;
+    max-width:140mm;
+  }
+  .r-summary strong{color:var(--ink);font-weight:600;}
+
+  /* ====== 技能：逗号分隔纯文本 ====== */
+  .r-skill-group{
+    display:grid;
+    grid-template-columns:30mm 1fr;
+    gap:0 8mm;
+    font-size:9.5pt;
+    color:var(--soft);
+    line-height:1.7;
+    margin-bottom:1.5mm;
+  }
+  .r-skill-group:last-child{margin-bottom:0;}
+  .r-skill-label{
+    font-size:8pt;
+    letter-spacing:1px;
+    color:var(--faint);
+    padding-top:2px;
+  }
+  .r-skill-items{min-width:0;}
+  .r-skill-item{display:inline;}
+  .r-skill-item + .r-skill-item::before{
+    content:"，";
+    color:var(--faint);
+  }
+
+  /* ====== 教育 & 其他：同样走展签网格 ====== */
+  .r-edu,.r-extra{
+    display:grid;
+    grid-template-columns:30mm 1fr;
+    gap:0 8mm;
+    font-size:9.5pt;
+    color:var(--soft);
+    line-height:1.7;
+    margin-bottom:2mm;
+  }
+  .r-edu:last-child,.r-extra:last-child{margin-bottom:0;}
+  .r-edu-period{
+    font-size:8pt;
+    color:var(--faint);
+    letter-spacing:1px;
+    font-variant-numeric:tabular-nums;
+    padding-top:2px;
+  }
+  .r-edu strong,.r-extra strong{color:var(--ink);font-weight:600;}
+
+  /* ====== 打印 ====== */
+  @page{size:A4;margin:0;}
+  @media print{
+    body{background:#fff;padding:0;}
+    .resume{box-shadow:none;width:210mm;min-height:297mm;}
+    .r-section,.r-job{page-break-inside:avoid;}
+  }
+  @media screen and (max-width:860px){
+    body{padding:0;}
+    .resume{width:100%;padding:10mm 7mm;}
+    .r-name{font-size:26pt;letter-spacing:8px;}
+    .r-job,.r-project,.r-skill-group,.r-edu,.r-extra{grid-template-columns:1fr;gap:1mm 0;}
+  }
+</style>
+</head>
+<body>
+
+<article class="resume">
+
+  <header class="r-header">
+    <h1 class="r-name">沈亦楠</h1>
+    <p class="r-title">视觉设计师 · 品牌设计</p>
+    <ul class="r-contacts">
+      <li class="r-contact" data-type="phone">137-****-4820</li>
+      <li class="r-contact" data-type="email">shenyinan@example.com</li>
+      <li class="r-contact" data-type="city">杭州</li>
+      <li class="r-contact" data-type="site">yinanshen.design</li>
+      <li class="r-contact" data-type="behance">behance.net/yinan-shen</li>
+    </ul>
+  </header>
+
+  <section class="r-section" data-section="summary">
+    <h2 class="r-section-title">简 述</h2>
+    <p class="r-summary">6 年品牌与视觉设计经验，服务过 <strong>30+</strong> 消费品牌与互联网公司。以字体排印与网格系统见长，擅长把品牌策略转译为可落地的视觉系统。作品获 <strong>站酷奖铜奖</strong>、GDC Award 提名，多次入选站酷首页推荐。</p>
+  </section>
+
+  <section class="r-section" data-section="experience">
+    <h2 class="r-section-title">经 历</h2>
+
+    <div class="r-job">
+      <span class="r-job-period">2022.03<br>至今</span>
+      <div class="r-job-main">
+        <div class="r-job-head">
+          <h3 class="r-job-company">未山设计</h3>
+          <span class="r-job-role">高级品牌设计师</span>
+        </div>
+        <p class="r-job-desc">独立品牌设计工作室（20 人）· 消费品牌全案方向</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">主导茶饮品牌「山雾」全案焕新：标志、VI、包装与门店物料，焕新后季度营收增长 <strong>32%</strong>，项目获 <strong>站酷奖铜奖</strong></li>
+          <li class="r-bullet">建立工作室品牌组件库与交付规范，全案平均交付周期从 <strong>10 周缩短至 6 周</strong>，客户续约率提升至 <strong>75%</strong></li>
+          <li class="r-bullet">带教 3 名初级设计师，建立双周内部评图机制，团队项目返工率下降 <strong>50%</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="r-job">
+      <span class="r-job-period">2020.06<br>2022.02</span>
+      <div class="r-job-main">
+        <div class="r-job-head">
+          <h3 class="r-job-company">澜图科技</h3>
+          <span class="r-job-role">视觉设计师</span>
+        </div>
+        <p class="r-job-desc">工具类 App（用户 4,000 万）· 负责品牌与运营视觉</p>
+        <ul class="r-bullets">
+          <li class="r-bullet">负责 App 5.0 视觉升级，统一 200+ 页面的图标与插画语言，App Store 评分从 4.2 提升至 <strong>4.7</strong></li>
+          <li class="r-bullet">搭建运营活动视觉模板体系，设计人力投入减少 <strong>60%</strong>，活动平均点击率提升 <strong>24%</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="r-section" data-section="projects">
+    <h2 class="r-section-title">项 目</h2>
+    <div class="r-project">
+      <span class="r-job-period">2023</span>
+      <div>
+        <div class="r-project-head">
+          <span class="r-project-name">「城市呼吸」系列海报</span>
+          <span class="r-project-tag">入选 2023 站酷设计周</span>
+        </div>
+        <p>以 12 座城市声音为起点的字体海报系列，线上曝光 <strong>80 万+</strong>，被 <strong>3 家</strong>设计媒体专题报道。</p>
+      </div>
+    </div>
+    <div class="r-project">
+      <span class="r-job-period">2022 –<br>至今</span>
+      <div>
+        <div class="r-project-head">
+          <span class="r-project-name">独立出版 Zine《野径》</span>
+          <span class="r-project-tag">abC 艺术书展参展</span>
+        </div>
+        <p>自编辑、自排版的摄影与文字合集，已出 4 期，单期印刷 <strong>500 册</strong>全部售罄。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="r-section" data-section="skills">
+    <h2 class="r-section-title">能 力</h2>
+    <div class="r-skill-group">
+      <span class="r-skill-label">设计</span>
+      <span class="r-skill-items">
+        <span class="r-skill-item">品牌识别</span><span class="r-skill-item">VI 系统</span><span class="r-skill-item">字体排印</span><span class="r-skill-item">包装设计</span><span class="r-skill-item">动态海报</span>
+      </span>
+    </div>
+    <div class="r-skill-group">
+      <span class="r-skill-label">工具</span>
+      <span class="r-skill-items">
+        <span class="r-skill-item">Figma</span><span class="r-skill-item">Illustrator</span><span class="r-skill-item">After Effects</span><span class="r-skill-item">C4D 基础</span>
+      </span>
+    </div>
+    <div class="r-skill-group">
+      <span class="r-skill-label">落地</span>
+      <span class="r-skill-items">
+        <span class="r-skill-item">印刷工艺</span><span class="r-skill-item">纸张与成本核算</span><span class="r-skill-item">供应商管理</span>
+      </span>
+    </div>
+  </section>
+
+  <section class="r-section" data-section="education">
+    <h2 class="r-section-title">教 育</h2>
+    <div class="r-edu">
+      <span class="r-edu-period">2016 –<br>2020</span>
+      <span><strong>中国美术学院</strong> · 视觉传达设计 · 本科。毕业设计银奖，连续三年一等奖学金。</span>
+    </div>
+  </section>
+
+  <section class="r-section" data-section="extras">
+    <h2 class="r-section-title">其 他</h2>
+    <div class="r-extra">
+      <span class="r-edu-period">荣誉</span>
+      <span><strong>站酷奖铜奖</strong>（2024）· <strong>GDC Award 提名</strong>（2023）· 站酷推荐设计师</span>
+    </div>
+    <div class="r-extra">
+      <span class="r-edu-period">语言</span>
+      <span>中文（母语），英语流利，可读英文设计文献</span>
+    </div>
+  </section>
+
+</article>
+
+</body>
+</html>

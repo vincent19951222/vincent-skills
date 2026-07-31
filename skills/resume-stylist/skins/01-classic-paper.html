@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>陈砚舟 · 简历 · 经典纸质</title>
+<meta name="author" content="陈砚舟">
+<link rel="icon" href="data:,">
+<meta name="description" content="陈砚舟 · AI 产品经理简历（经典纸质风格 demo）。5 年互联网产品经验，3 年专注 AI 产品。">
+<style>
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @page {
+    size: A4;
+    margin: 11mm 14mm 11mm 14mm;
+    background: #f5f4ed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f4;
+    --rule:      #d8d5c8;
+    --rule-soft: #e3e1d5;
+    --ink:       #1a1a18;
+    --ink-warm:  #3d3c37;
+    --olive:     #57554d;
+    --stone:     #7c7a70;
+    --brand:     #1B365D;
+    --brand-tint: #edf1f6;
+    --serif: "TsangerJinKai02", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", Georgia, serif;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 13mm 15mm;
+      box-shadow: 0 0 0 0.5pt rgba(60, 58, 48, 0.08);
+    }
+  }
+
+  body {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 9.4pt;
+    line-height: 1.5;
+    letter-spacing: 0.3pt;
+    widows: 3;
+    orphans: 3;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  ul { list-style: none; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== Header ===== */
+  .r-header {
+    text-align: center;
+    padding-bottom: 3.2mm;
+    margin-bottom: 3.6mm;
+    border-bottom: 0.6pt solid var(--ink);
+    position: relative;
+  }
+  /* 双线：经典书籍版式 */
+  .r-header::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 1.4mm;
+    border-bottom: 0.3pt solid var(--ink);
+  }
+  .r-name {
+    font-size: 24pt;
+    font-weight: 500;
+    letter-spacing: 4.5pt;
+    text-indent: 4.5pt; /* 视觉居中补偿字距 */
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .r-title {
+    margin-top: 1.4mm;
+    font-size: 10.5pt;
+    color: var(--brand);
+    letter-spacing: 2.6pt;
+    text-indent: 2.6pt;
+    font-weight: 500;
+  }
+  .r-contacts {
+    margin-top: 2.2mm;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0 1.4mm;
+    font-size: 8.6pt;
+    color: var(--olive);
+    letter-spacing: 0.2pt;
+  }
+  .r-contact { display: inline-flex; align-items: baseline; white-space: nowrap; }
+  .r-contact + .r-contact::before {
+    content: "·";
+    margin: 0 1.4mm 0 0;
+    color: var(--rule);
+  }
+
+  /* ===== Section ===== */
+  .r-section { margin-top: 3.2mm; }
+  .r-section-title {
+    display: flex;
+    align-items: baseline;
+    gap: 2.8mm;
+    font-size: 11.5pt;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 2pt;
+    padding-bottom: 1.1mm;
+    margin-bottom: 1.8mm;
+    border-bottom: 0.5pt solid var(--rule);
+  }
+  .r-section-title::before {
+    content: "";
+    width: 2.5mm;
+    height: 2.5mm;
+    background: var(--brand);
+    align-self: center;
+    flex-shrink: 0;
+  }
+  .r-section-title .en {
+    font-size: 7.4pt;
+    letter-spacing: 2.2pt;
+    color: var(--stone);
+    font-weight: 400;
+    margin-left: auto;
+    text-transform: uppercase;
+  }
+
+  /* ===== Summary ===== */
+  .r-summary {
+    font-size: 9.5pt;
+    line-height: 1.56;
+    color: var(--ink-warm);
+    text-align: justify;
+  }
+  .r-summary strong { color: var(--brand); font-weight: 500; }
+
+  /* ===== Job ===== */
+  .r-job { margin-bottom: 2.8mm; break-inside: avoid; }
+  .r-job:last-child { margin-bottom: 0; }
+  .r-job-head {
+    display: flex;
+    align-items: baseline;
+    gap: 2.4mm;
+    margin-bottom: 0.5mm;
+  }
+  .r-job-company {
+    font-size: 10.8pt;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.6pt;
+  }
+  .r-job-role {
+    font-size: 9.5pt;
+    color: var(--brand);
+    font-weight: 500;
+    letter-spacing: 0.4pt;
+  }
+  .r-job-period {
+    margin-left: auto;
+    font-size: 8.8pt;
+    color: var(--stone);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.2pt;
+    white-space: nowrap;
+  }
+  .r-job-desc {
+    font-size: 8.7pt;
+    color: var(--stone);
+    margin-bottom: 1mm;
+    letter-spacing: 0.3pt;
+  }
+  .r-bullets { padding-left: 0; }
+  .r-bullet {
+    position: relative;
+    padding-left: 4mm;
+    font-size: 9.4pt;
+    line-height: 1.5;
+    color: var(--ink-warm);
+    margin-bottom: 1mm;
+    text-align: justify;
+  }
+  .r-bullet:last-child { margin-bottom: 0; }
+  .r-bullet::before {
+    content: "";
+    position: absolute;
+    left: 0.6mm;
+    top: 0.62em;
+    width: 1.5mm;
+    height: 1.5mm;
+    border: 0.4pt solid var(--brand);
+    background: transparent;
+  }
+  .r-bullet strong {
+    color: var(--brand);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ===== Projects ===== */
+  .r-project { margin-bottom: 2.6mm; break-inside: avoid; }
+  .r-project:last-child { margin-bottom: 0; }
+
+  /* ===== Skills ===== */
+  .r-skill-group {
+    display: flex;
+    align-items: baseline;
+    gap: 4mm;
+    padding: 1.1mm 0;
+    border-bottom: 0.3pt dotted var(--rule);
+  }
+  .r-skill-group:last-child { border-bottom: none; }
+  .r-skill-label {
+    flex-shrink: 0;
+    width: 18mm;
+    font-size: 9.2pt;
+    font-weight: 500;
+    color: var(--brand);
+    letter-spacing: 1pt;
+  }
+  .r-skill-items {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.1mm;
+    font-size: 9.6pt;
+    color: var(--ink-warm);
+  }
+  .r-skill-item { white-space: nowrap; }
+  .r-skill-item + .r-skill-item::before {
+    content: "·";
+    margin-right: 1.2mm;
+    color: var(--rule);
+  }
+
+  /* ===== Education ===== */
+  .r-edu {
+    display: flex;
+    align-items: baseline;
+    gap: 2.6mm;
+    break-inside: avoid;
+  }
+  .r-edu-school {
+    font-size: 10.8pt;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.6pt;
+  }
+  .r-edu-major { font-size: 9.5pt; color: var(--olive); }
+  .r-edu-period {
+    margin-left: auto;
+    font-size: 8.8pt;
+    color: var(--stone);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .r-edu-note {
+    margin-top: 0.7mm;
+    font-size: 8.8pt;
+    color: var(--stone);
+    letter-spacing: 0.3pt;
+  }
+
+  /* ===== Extras ===== */
+  .r-extras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1mm 0;
+    font-size: 9.2pt;
+    color: var(--ink-warm);
+  }
+  .r-extra { display: inline-flex; align-items: baseline; white-space: nowrap; }
+  .r-extra + .r-extra::before {
+    content: "";
+    width: 1mm;
+    height: 1mm;
+    background: var(--rule);
+    margin: 0 2.8mm;
+    align-self: center;
+  }
+  .r-extra strong { color: var(--brand); font-weight: 500; }
+
+  /* ===== Bottom two-column row (education | extras) ===== */
+  .r-cols {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    column-gap: 9mm;
+    margin-top: 3.2mm;
+    break-inside: avoid;
+  }
+  .r-cols .r-section { margin-top: 0; }
+  .r-cols .r-extras { flex-direction: column; gap: 1.1mm; }
+  .r-cols .r-extra { white-space: normal; }
+  .r-cols .r-extra + .r-extra::before { display: none; }
+
+  @media print {
+    body { padding: 0; box-shadow: none; max-width: none; }
+    .r-section { break-inside: auto; }
+  }
+</style>
+</head>
+<body>
+
+<article class="resume">
+
+  <!-- ===== Header ===== -->
+  <header class="r-header">
+    <h1 class="r-name">陈砚舟</h1>
+    <p class="r-title">AI 产品经理</p>
+    <ul class="r-contacts">
+      <li class="r-contact" data-type="phone">138-****-7261</li>
+      <li class="r-contact" data-type="email">chenyanzhou@example.com</li>
+      <li class="r-contact" data-type="city">上海 · 可接受远程</li>
+      <li class="r-contact" data-type="site">chenyanzhou.dev</li>
+      <li class="r-contact" data-type="github">github.com/yanzhou-chen</li>
+    </ul>
+  </header>
+
+  <!-- ===== Summary ===== -->
+  <section class="r-section" data-section="summary">
+    <h2 class="r-section-title">职业摘要<span class="en">Summary</span></h2>
+    <p class="r-summary">
+      5 年互联网产品经验，其中 3 年专注 AI 产品。主导过从 0 到 1 的 AI 对话产品与搜索产品，擅长将大模型能力转化为可衡量的业务指标——曾推动企业客户付费转化率从 <strong>8%</strong> 提升至 <strong>19%</strong>。技术背景出身（软件工程本科 + 2 年后端开发），能与工程团队无损沟通；带领 4 人产品小组，协调 22 人跨职能虚拟团队。
+    </p>
+  </section>
+
+  <!-- ===== Experience ===== -->
+  <section class="r-section" data-section="experience">
+    <h2 class="r-section-title">工作经历<span class="en">Experience</span></h2>
+
+    <div class="r-job">
+      <div class="r-job-head">
+        <h3 class="r-job-company">星澜科技</h3>
+        <span class="r-job-role">高级 AI 产品经理</span>
+        <span class="r-job-period">2023.04 – 至今</span>
+      </div>
+      <p class="r-job-desc">AI 原生协作工具公司（B 轮，200 人），负责核心产品「星澜 Copilot」产品线。</p>
+      <ul class="r-bullets">
+        <li class="r-bullet">主导「星澜 Copilot」从 0 到 1 上线，6 个月内 <strong>DAU 达 12 万</strong>，次月留存 <strong>41%</strong>，超出公司 OKR 目标 35%</li>
+        <li class="r-bullet">设计多轮对话的上下文压缩策略，单次会话平均 token 成本降低 <strong>58%</strong>，年节省推理成本约 <strong>400 万元</strong></li>
+        <li class="r-bullet">推动 RAG 知识库功能落地，企业客户付费转化率从 <strong>8% 提升至 19%</strong>，ARR 增长 <strong>2,300 万元</strong></li>
+        <li class="r-bullet">建立 AI 产品评估体系（离线索引 + 在线 A/B + 人工抽检三层），bad case 响应周期从 <strong>2 周缩短至 2 天</strong></li>
+        <li class="r-bullet">带领 4 人产品小组，协调算法、工程、设计共 <strong>22 人</strong>虚拟团队；建立双周用户访谈机制，累计访谈 <strong>60+</strong> 企业客户</li>
+      </ul>
+    </div>
+
+    <div class="r-job">
+      <div class="r-job-head">
+        <h3 class="r-job-company">蓝鲸互娱</h3>
+        <span class="r-job-role">产品经理</span>
+        <span class="r-job-period">2021.06 – 2023.03</span>
+      </div>
+      <p class="r-job-desc">中型互联网公司（2,000 人），内容社区赛道，负责搜索与推荐策略产品。</p>
+      <ul class="r-bullets">
+        <li class="r-bullet">负责搜索产品改版，重构 Query 理解与排序策略，搜索渗透率从 <strong>23% 提升至 35%</strong>，搜索后点击率提升 <strong>27%</strong></li>
+        <li class="r-bullet">设计创作者冷启动流量扶持策略，新创作者 30 日留存提升 <strong>18%</strong>，月均新增万粉创作者从 40 人增至 <strong>110 人</strong></li>
+        <li class="r-bullet">搭建策略产品的数据看板与实验平台规范，A/B 实验上线周期从平均 3 周缩短至 <strong>1 周</strong></li>
+        <li class="r-bullet">主导跨部门「内容生态健康度」专项，联合运营、审核、算法制定 12 项生态指标，低质内容曝光占比下降 <strong>40%</strong></li>
+      </ul>
+    </div>
+
+    <div class="r-job">
+      <div class="r-job-head">
+        <h3 class="r-job-company">云帆软件</h3>
+        <span class="r-job-role">后端工程师</span>
+        <span class="r-job-period">2019.07 – 2021.05</span>
+      </div>
+      <ul class="r-bullets">
+        <li class="r-bullet">企业级 SaaS 订单中台团队（Java / Go）：负责订单履约系统服务化拆分与分布式库存方案设计，支撑日均 <strong>300 万</strong>订单峰值，大促可用性提升至 <strong>99.95%</strong>；主导性能优化专项，核心链路 P99 延迟从 800ms 降至 <strong>120ms</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Projects ===== -->
+  <section class="r-section" data-section="projects">
+    <h2 class="r-section-title">项目经历<span class="en">Projects</span></h2>
+
+    <div class="r-job r-project">
+      <div class="r-job-head">
+        <h3 class="r-job-company">llm-eval-kit</h3>
+        <span class="r-job-role">开源项目 · 独立开发</span>
+        <span class="r-job-period">GitHub Star 1.2k</span>
+      </div>
+      <ul class="r-bullets">
+        <li class="r-bullet">独立开发的大模型评估工具包，支持自定义评估集、多模型对比与回归测试；被 <strong>3 家</strong> AI 创业公司采用为内部评估基础设施，累计收到 <strong>40+</strong> PR 贡献</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Skills ===== -->
+  <section class="r-section" data-section="skills">
+    <h2 class="r-section-title">专业技能<span class="en">Skills</span></h2>
+
+    <div class="r-skill-group">
+      <span class="r-skill-label">产品</span>
+      <span class="r-skill-items">
+        <span class="r-skill-item">用户研究</span>
+        <span class="r-skill-item">A/B 实验设计</span>
+        <span class="r-skill-item">PRD 与原型（Figma）</span>
+        <span class="r-skill-item">SQL 自助取数</span>
+        <span class="r-skill-item">Roadmap 规划</span>
+      </span>
+    </div>
+    <div class="r-skill-group">
+      <span class="r-skill-label">AI / 技术</span>
+      <span class="r-skill-items">
+        <span class="r-skill-item">Prompt Engineering</span>
+        <span class="r-skill-item">RAG 架构</span>
+        <span class="r-skill-item">LLM 评估方法</span>
+        <span class="r-skill-item">Python（数据处理）</span>
+        <span class="r-skill-item">了解微调与 Agent 框架</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- ===== Education & Extras (two-column) ===== -->
+  <div class="r-cols">
+
+  <section class="r-section" data-section="education">
+    <h2 class="r-section-title">教育背景<span class="en">Education</span></h2>
+    <div class="r-edu">
+      <span class="r-edu-school">华东理工大学</span>
+      <span class="r-edu-major">软件工程 · 本科</span>
+      <span class="r-edu-period">2015 – 2019</span>
+    </div>
+    <p class="r-edu-note">GPA 3.6/4.0（专业前 10%） · 校级 ACM 集训队成员，蓝桥杯全国二等奖 · 校级优秀毕业设计</p>
+  </section>
+
+  <!-- ===== Extras ===== -->
+  <section class="r-section" data-section="extras">
+    <h2 class="r-section-title">证书与其他<span class="en">Extras</span></h2>
+    <div class="r-extras">
+      <span class="r-extra"><strong>PMP</strong>&nbsp;项目管理认证（2022）</span>
+      <span class="r-extra">年度「最佳产品奖」（2024）</span>
+      <span class="r-extra">英语流利（CET-6 590）</span>
+      <span class="r-extra">半马 PB 1:58 · 胶片摄影</span>
+    </div>
+  </section>
+
+  </div>
+
+</article>
+
+</body>
+</html>
