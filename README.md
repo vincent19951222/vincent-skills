@@ -1,10 +1,12 @@
 # Vincent Skills
 
+[![skills.sh](https://skills.sh/b/vincent19951222/vincent-skills)](https://skills.sh/vincent19951222/vincent-skills)
+
 这里是我分享的 Agent Skills 合集。每个 Skill 都是一个独立目录，包含 `SKILL.md`（触发条件与工作流）和配套资源文件，支持 Codex、Claude Code 等兼容 Agent Skills 的工具。
 
 ## 如何使用
 
-推荐通过 `skills` CLI 安装：
+推荐通过 [skills.sh](https://skills.sh/) 的 `skills` CLI 安装，无需预先全局安装 CLI：
 
 ```bash
 # 查看仓库中的 Skills
@@ -18,6 +20,19 @@ npx skills add vincent19951222/vincent-skills \
   --skill resume-stylist \
   --agent codex \
   --global
+```
+
+常用维护命令：
+
+```bash
+# 更新全局安装的 resume-stylist
+npx skills update resume-stylist --global --yes
+
+# 查看 Codex 中的全局 Skills
+npx skills list --global --agent codex
+
+# 从 Codex 移除全局安装
+npx skills remove resume-stylist --global --agent codex --yes
 ```
 
 也可以把整个 Skill 目录手动复制到对应工具的 skills 目录，例如 Codex 的 `~/.codex/skills/` 或 Claude Code 的 `~/.claude/skills/`。
@@ -76,6 +91,16 @@ npx skills add vincent19951222/vincent-skills --skill resume-stylist
 | 画廊极简 | 设计工作室 / 外企 / 创意团队 |
 
 皮肤中的“陈砚舟”和“沈亦楠”均为虚构示例人物，可直接打开 HTML 预览各风格效果。
+
+#### 发布检查
+
+维护者发布前可运行：
+
+```bash
+node skills/resume-stylist/scripts/regression.mjs
+```
+
+该命令会执行内容检查器自测、校验全部 10 套皮肤的 HTML 契约，并通过真实浏览器逐一生成和验证单页 A4 PDF；需要 Node.js、`npx` 与 Poppler。
 
 ## License
 
