@@ -1,6 +1,7 @@
 # Vincent Skills
 
 [![skills.sh](https://skills.sh/b/vincent19951222/vincent-skills)](https://skills.sh/vincent19951222/vincent-skills)
+[![GitHub Release](https://img.shields.io/github/v/release/vincent19951222/vincent-skills)](https://github.com/vincent19951222/vincent-skills/releases/latest)
 
 这里是我分享的 Agent Skills 合集。每个 Skill 都是一个独立目录，包含 `SKILL.md`（触发条件与工作流）和配套资源文件，支持 Codex、Claude Code 等兼容 Agent Skills 的工具。
 
@@ -20,6 +21,10 @@ npx skills add vincent19951222/vincent-skills \
   --skill resume-stylist \
   --agent codex \
   --global
+
+# 固定安装 resume-stylist v0.1.0
+npx skills add 'vincent19951222/vincent-skills#v0.1.0' \
+  --skill resume-stylist
 ```
 
 常用维护命令：
@@ -89,6 +94,22 @@ npx skills add vincent19951222/vincent-skills --skill resume-stylist
 | 瑞士极简 | 外企 / 设计导向 |
 | 杂志衬线 | 设计 / 艺术 / 内容 |
 | 画廊极简 | 设计工作室 / 外企 / 创意团队 |
+
+#### 模板预览
+
+预览图放在仓库级 `examples/resume-stylist/`，不会进入安装后的 Skill。点击图片可查看完整 WebP：
+
+| 经典纸质 | 商务专业 |
+|---|---|
+| [![经典纸质简历模板](examples/resume-stylist/01-classic-paper.webp)](examples/resume-stylist/01-classic-paper.webp) | [![商务专业简历模板](examples/resume-stylist/02-enterprise.webp)](examples/resume-stylist/02-enterprise.webp) |
+| **互联网简洁** | **工程师终端** |
+| [![互联网简洁简历模板](examples/resume-stylist/03-internet-clean.webp)](examples/resume-stylist/03-internet-clean.webp) | [![工程师终端简历模板](examples/resume-stylist/04-terminal-engineer.webp)](examples/resume-stylist/04-terminal-engineer.webp) |
+| **AI Pixel** | **AI 锋锐** |
+| [![AI Pixel 简历模板](examples/resume-stylist/05-ai-pixel.webp)](examples/resume-stylist/05-ai-pixel.webp) | [![AI 锋锐简历模板](examples/resume-stylist/06-ai-edge.webp)](examples/resume-stylist/06-ai-edge.webp) |
+| **暖调专业** | **瑞士极简** |
+| [![暖调专业简历模板](examples/resume-stylist/07-warm-modern.webp)](examples/resume-stylist/07-warm-modern.webp) | [![瑞士极简简历模板](examples/resume-stylist/08-swiss-minimal.webp)](examples/resume-stylist/08-swiss-minimal.webp) |
+| **杂志衬线** | **画廊极简** |
+| [![杂志衬线简历模板](examples/resume-stylist/09-editorial-serif.webp)](examples/resume-stylist/09-editorial-serif.webp) | [![画廊极简简历模板](examples/resume-stylist/10-gallery-minimal.webp)](examples/resume-stylist/10-gallery-minimal.webp) |
 
 皮肤中的“陈砚舟”和“沈亦楠”均为虚构示例人物，可直接打开 HTML 预览各风格效果。
 
