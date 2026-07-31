@@ -54,6 +54,8 @@ npx skills add vincent19951222/vincent-skills --skill resume-stylist
 
 完整字段见[标准信息收集表](skills/resume-stylist/references/intake.md)。手机号、邮箱等隐私信息可以先使用脱敏占位符，最终交付前再替换。
 
+对于新建或内容优化任务，Agent 会先给出事实清单、纯文本简历稿和改动说明；只有你明确确认后，才会生成最终 HTML。只换视觉且要求保留原文时可跳过这一步。
+
 **核心设计**：1 个内容骨架 + N 个视觉皮肤，两者正交——
 
 - `references/skeleton.md`：语义化 HTML 契约 + bullet 写作规范（强动词 + 量化结果，拒绝"负责/参与"）
