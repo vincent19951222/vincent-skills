@@ -50,6 +50,26 @@ npx skills remove resume-stylist --global --agent codex --yes
 
 将原始文本、会议记录、资料摘录、产品分析或已有 Markdown 提炼并排版为高信息密度、强结构、易扫描的知识笔记。支持整理笔记、提炼要点、压缩长文、去重重组，以及生成适合 Obsidian、Notion 或 GitHub README 的内容；也支持仅优化排版而不改写原文。
 
+### 🎨 rednote-cover-gen · 小红书主角封面共创
+
+根据标题、内容和可选主角生成一张竖版 3:4 小红书封面。默认先共同确认一个封面草案，再调用 ImageGen 生成；用户明确要求“不用确认、直接生成”时也支持快捷出图。
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill rednote-cover-gen
+```
+
+> 使用 $rednote-cover-gen 和我一起做小红书封面。标题是“第一次做独立产品，我踩了这 5 个坑”，内容是个人复盘，主角交给你设计。
+
+### 🖼️ artifact-template-warm-paper · Warm Paper 手绘头像
+
+把人物参考照片转换为暖色纸张质感、细线稿与柔和水彩上色的正面半写实胸像，并保持模板的构图、配色和材质语言。[查看模板预览](skills/artifact-template-warm-paper/assets/preview.png)。
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill artifact-template-warm-paper
+```
+
+> 使用 $artifact-template-warm-paper，把我上传的照片转换成 Warm Paper 手绘头像。
+
 ### 📄 resume-stylist · 简历风格生成器
 
 根据**岗位方向**（产品 / 研发 / 职能 / 设计创意）与**目标公司性质**（传统 / 互联网 / AI native），生成匹配风格的单页 A4 HTML 与 PDF 简历。

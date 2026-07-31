@@ -1,0 +1,4 @@
+interface:
+  display_name: "小红书主角封面共创"
+  short_description: "用标题、内容和可选主角，共创确认后生成统一风格小红书封面"
+  default_prompt: "使用 $rednote-cover-gen 和我一起做一张小红书封面。"
