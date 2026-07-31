@@ -94,7 +94,11 @@
 **约定：**
 - `data-section` 是皮肤布局的唯一依据（皮肤可对不同 section 做双栏、侧栏等排布）
 - bullet 内允许 `<strong>` 包裹关键数字/成果，皮肤可对其做高亮处理
-- 不在内容层写任何样式相关的 class（如 `text-blue`）
+- 内容元素只使用稳定的 `r-*` 语义 class，不写 `text-blue` 等视觉工具 class
+- 皮肤可以增加包裹层和皮肤专用结构 class，但不能用它们替代 `r-*` 与 `data-section` 语义钩子
+- 不使用 `style=""` 内联样式；间距、颜色和布局全部写入皮肤的 `<style>`，并通过语义选择器生效
+- HTML 必须自包含：不加载外部 CSS、JavaScript、图片或字体；字体只能使用系统栈或 `data:` 内嵌资源
+- 候选人的网站、GitHub、LinkedIn、Behance 等 `<a href>` 属于内容链接，不视为外部运行时依赖
 
 ---
 

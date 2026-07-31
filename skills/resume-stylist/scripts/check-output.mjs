@@ -74,8 +74,68 @@ function findMeta(html, name) {
   return null;
 }
 
-function checkHtml(html, options) {
+function tags(html, tagName) {
+  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, "gi"))].map((match) => ({
+    raw: match[0],
+    attributes: parseAttributes(match[0]),
+  }));
+}
+
+function hasClass(attributes, className) {
+  return (attributes.class ?? "").split(/\s+/).includes(className);
+}
+
+function checkContract(html) {
   const errors = [];
+  const articleResumes = tags(html, "article").filter((tag) => hasClass(tag.attributes, "resume"));
+  if (articleResumes.length !== 1) errors.push(`必须恰好存在一个 article.resume，当前为 ${articleResumes.length} 个。`);
+
+  const requiredClasses = ["r-header", "r-name", "r-title", "r-contacts"];
+  const allTags = [...html.matchAll(/<[a-z][^>]*>/gi)].map((match) => parseAttributes(match[0]));
+  for (const className of requiredClasses) {
+    if (!allTags.some((attributes) => hasClass(attributes, className))) errors.push(`缺少语义 class .${className}。`);
+  }
+
+  const sectionTags = tags(html, "section");
+  const semanticSections = sectionTags.filter((tag) => hasClass(tag.attributes, "r-section"));
+  for (const section of semanticSections) {
+    if (!section.attributes["data-section"]) errors.push("存在缺少 data-section 的 section.r-section。");
+  }
+  const sectionNames = new Set(semanticSections.map((section) => section.attributes["data-section"]).filter(Boolean));
+  for (const required of ["summary", "experience", "skills", "education"]) {
+    if (!sectionNames.has(required)) errors.push(`缺少核心 data-section="${required}"。`);
+  }
+
+  if (allTags.some((attributes) => Object.hasOwn(attributes, "style"))) errors.push("存在 style= 内联样式。");
+  if (/<script\b/i.test(html)) errors.push("存在 <script>；简历 HTML 不允许 JavaScript。");
+  if (/<link\b[^>]*\brel\s*=\s*["']?stylesheet/i.test(html)) errors.push("存在外部 stylesheet link。");
+  if (/@import\b/i.test(html)) errors.push("CSS 中存在 @import。");
+  if (!/@page\b[\s\S]*?size\s*:\s*a4/i.test(html)) errors.push("缺少 @page A4 声明。");
+  if (!/@media\s+print\b/i.test(html)) errors.push("缺少 @media print。");
+
+  for (const match of html.matchAll(/url\(\s*(["']?)(.*?)\1\s*\)/gi)) {
+    const value = match[2].trim();
+    if (value && !value.startsWith("data:") && !value.startsWith("#")) errors.push(`CSS 包含非内嵌资源：url(${value.slice(0, 120)})。`);
+  }
+
+  for (const tagName of ["img", "source", "audio", "video", "iframe", "embed", "object"]) {
+    for (const tag of tags(html, tagName)) {
+      for (const attribute of ["src", "poster", "data"]) {
+        const value = tag.attributes[attribute];
+        if (value && !value.startsWith("data:")) errors.push(`<${tagName}> 的 ${attribute} 不是 data: 内嵌资源。`);
+      }
+    }
+  }
+  for (const link of tags(html, "link")) {
+    const href = link.attributes.href ?? "";
+    if (href && !href.startsWith("data:")) errors.push(`<link> 资源不是 data: 内嵌资源：${href}。`);
+  }
+
+  return [...new Set(errors)];
+}
+
+function checkHtml(html, options) {
+  const errors = checkContract(html);
   const warnings = [];
   const text = visibleText(html);
   const lowerHtml = html.toLowerCase();
@@ -153,9 +213,13 @@ function checkHtml(html, options) {
 function parseCli(argv) {
   if (argv.includes("--self-test")) return { selfTest: true };
   const fileName = argv[0];
-  const options = { fileName, allowPlaceholders: false };
+  const options = { fileName, allowPlaceholders: false, contractOnly: false };
   for (let index = 1; index < argv.length; index += 1) {
     const argument = argv[index];
+    if (argument === "--contract-only") {
+      options.contractOnly = true;
+      continue;
+    }
     if (argument === "--allow-placeholders") {
       options.allowPlaceholders = true;
       continue;
@@ -169,12 +233,12 @@ function parseCli(argv) {
     }
     throw new Error(`未知参数：${argument}`);
   }
-  if (!fileName || !options.name || !options.role || !options.style) throw new Error("用法：check-output.mjs <HTML> --name <姓名> --role <岗位> --style <风格名> [--email <邮箱>] [--phone <手机>] [--allow-placeholders]");
+  if (!fileName || (!options.contractOnly && (!options.name || !options.role || !options.style))) throw new Error("用法：check-output.mjs <HTML> --name <姓名> --role <岗位> --style <风格名> [--email <邮箱>] [--phone <手机>] [--allow-placeholders]；或 check-output.mjs <HTML> --contract-only");
   return options;
 }
 
 function selfTest() {
-  const valid = `<!doctype html><html lang="zh-CN"><head><title>李明 · 产品经理 · 简历</title><meta name="author" content="李明"><meta name="description" content="李明 · 产品经理简历"></head><body><article class="resume"><h1>李明</h1><a href="mailto:li@example.cn">li@example.cn</a><span>13800138000</span><a href="https://liming.cn">https://liming.cn</a></article></body></html>`;
+  const valid = `<!doctype html><html lang="zh-CN"><head><title>李明 · 产品经理 · 简历</title><meta name="author" content="李明"><meta name="description" content="李明 · 产品经理简历"><style>@page{size:A4;margin:0}@media print{body{margin:0}}</style></head><body><article class="resume"><header class="r-header"><h1 class="r-name">李明</h1><p class="r-title">产品经理</p><ul class="r-contacts"><li><a href="mailto:li@example.cn">li@example.cn</a></li><li>13800138000</li></ul></header><section class="r-section" data-section="summary">职业摘要</section><section class="r-section" data-section="experience">工作经历</section><section class="r-section" data-section="skills">专业技能</section><section class="r-section" data-section="education">教育背景</section><a href="https://liming.cn">https://liming.cn</a></article></body></html>`;
   const validResult = checkHtml(valid, { fileName: "李明-产品经理-简历-互联网简洁.html", name: "李明", role: "产品经理", style: "互联网简洁", email: "li@example.cn", phone: "13800138000", allowPlaceholders: false });
   if (validResult.errors.length) throw new Error(`有效样例未通过：${validResult.errors.join("；")}`);
   const wrongStyleResult = checkHtml(valid, { fileName: "李明-产品经理-简历-经典纸质.html", name: "李明", role: "产品经理", style: "互联网简洁", allowPlaceholders: false });
@@ -186,7 +250,7 @@ function selfTest() {
   const allowedMaskedResult = checkHtml(masked, { fileName: "李明-产品经理-简历-互联网简洁.html", name: "李明", role: "产品经理", email: "li@example.cn", allowPlaceholders: true });
   if (allowedMaskedResult.errors.length || !allowedMaskedResult.warnings.length) throw new Error("允许占位符模式的错误/警告行为不正确。");
 
-  const invalid = `<!doctype html><html><head><title>陈砚舟 · 简历</title></head><body><h1>张华</h1><a href="#">chenyanzhou@example.com</a><p>星澜科技 TODO</p></body></html>`;
+  const invalid = `<!doctype html><html><head><title>陈砚舟 · 简历</title><link rel="stylesheet" href="https://example.com/resume.css"></head><body><h1 style="color:red">张华</h1><a href="#">chenyanzhou@example.com</a><p>星澜科技 TODO</p><script>alert(1)</script></body></html>`;
   const invalidResult = checkHtml(invalid, { fileName: "resume.html", name: "张华", role: "研发工程师", allowPlaceholders: false });
   if (invalidResult.errors.length < 5) throw new Error("无效样例没有触发足够的检查项。");
   const allowedInvalidResult = checkHtml(invalid, { fileName: "resume.html", name: "张华", role: "研发工程师", allowPlaceholders: true });
@@ -201,14 +265,14 @@ try {
     process.exit(0);
   }
   const html = readFileSync(options.fileName, "utf8");
-  const result = checkHtml(html, options);
+  const result = options.contractOnly ? { errors: checkContract(html), warnings: [] } : checkHtml(html, options);
   for (const warning of result.warnings) console.warn(`[WARN] ${warning}`);
   for (const error of result.errors) console.error(`[ERROR] ${error}`);
   if (result.errors.length) {
     console.error(`Content check failed: ${result.errors.length} error(s).`);
     process.exit(1);
   }
-  console.log(`Content check passed: ${options.fileName}`);
+  console.log(`${options.contractOnly ? "Contract" : "Content"} check passed: ${options.fileName}`);
 } catch (error) {
   console.error(`[ERROR] ${error.message}`);
   process.exit(1);

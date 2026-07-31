@@ -4,6 +4,21 @@
 
 ## 必查项目
 
+### 0. 自包含与语义契约
+
+- 恰好存在一个 `article.resume`，并保留 `r-header`、`r-name`、`r-title`、`r-contacts`。
+- `summary`、`experience`、`skills`、`education` 四个核心 `data-section` 存在；其他模块按岗位可选。
+- 每个 `section.r-section` 都有 `data-section`。
+- 保留 `@page { size: A4; }` 和 `@media print`。
+- 不存在 `style=""`、`<script>`、外部 stylesheet、`@import` 或非 `data:` 的字体/图片资源。
+- 候选人的网站等普通 `<a href>` 可以指向外部 URL。
+
+只检查皮肤契约、不检查虚构示例内容时运行：
+
+```bash
+node scripts/check-output.mjs skins/01-classic-paper.html --contract-only
+```
+
 ### 1. 文件与网页元信息
 
 - 文件名符合 `姓名-意向岗位-简历-风格名.html`。
