@@ -34,6 +34,26 @@ npx skills add vincent19951222/vincent-skills \
 
 根据**岗位方向**（产品 / 研发 / 职能 / 设计创意）与**目标公司性质**（传统 / 互联网 / AI native），生成匹配风格的单页 A4 HTML 简历。
 
+#### 快速开始
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill resume-stylist
+```
+
+有旧简历时，直接上传或粘贴内容，并告诉 Agent 目标岗位与公司：
+
+> 使用 $resume-stylist 优化这份旧简历。我应聘 AI 产品经理，目标是 AI native B2B 创业公司。请先读取已有信息，一次列出真正缺失的必填项，不要编造数据；信息齐全后推荐 1–2 套风格。
+
+从零开始时：
+
+> 使用 $resume-stylist 从零制作一页中文简历。我应聘互联网后端研发，目前只有零散经历。请先给我标准信息表，我填写后再推荐风格。
+
+只想换视觉风格时：
+
+> 使用 $resume-stylist 把现有简历换成“瑞士极简”风格。除非我明确同意，不要改写或删减内容。
+
+完整字段见[标准信息收集表](skills/resume-stylist/references/intake.md)。手机号、邮箱等隐私信息可以先使用脱敏占位符，最终交付前再替换。
+
 **核心设计**：1 个内容骨架 + N 个视觉皮肤，两者正交——
 
 - `references/skeleton.md`：语义化 HTML 契约 + bullet 写作规范（强动词 + 量化结果，拒绝"负责/参与"）
