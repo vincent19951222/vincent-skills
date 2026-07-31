@@ -79,8 +79,10 @@ description: 根据用户的岗位方向（产品/研发/职能/设计创意）�
    - 保留 `@page` / `@media print` 规则
 3. 读取 `references/output-check.md`，检查示例数据、元信息、联系方式和链接
 4. 环境有 Node.js 时必须运行：`node scripts/check-output.mjs <HTML> --name <姓名> --role <意向岗位>`；已知邮箱和手机时一并传入。检查失败不得交付
-5. 验证（环境允许时）：Chrome headless `--print-to-pdf --no-pdf-header-footer` 输出必须恰好 1 页 A4
-6. 输出为单个自包含 HTML（内联 CSS、无外部 JS），文件名格式：`姓名-意向岗位-简历-风格名.html`
+5. 读取 `references/layout-validation.md`。环境有 Node.js、npx 和 Poppler 时必须运行 `node scripts/validate-layout.mjs <HTML> --pdf <验证PDF> --name <姓名> --role <意向岗位>`
+6. 布局验证必须确认：真实正文非空、字体加载完成、没有横纵溢出或关键容器裁切、PDF 恰好 1 页且为 A4、PDF 文本含候选人姓名
+7. 缺少验证依赖时执行 `references/layout-validation.md` 的人工降级流程，并在交付说明中明确哪些自动检查未运行
+8. 输出为单个自包含 HTML（内联 CSS、无外部 JS），文件名格式：`姓名-意向岗位-简历-风格名.html`
 
 ## 禁止事项
 
