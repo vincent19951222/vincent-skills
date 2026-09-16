@@ -46,6 +46,42 @@ npx skills remove resume-stylist --global --agent codex --yes
 
 ## Skills 列表
 
+### 🖼️ codex-imagegen · Codex ImageGen 桥接器
+
+让没有原生生图工具的 Claude Code 或其他兼容 Agent，通过本机临时 `codex exec` 会话调用 Codex 内建 ImageGen。复用现有 Codex ChatGPT 登录，不要求 `OPENAI_API_KEY`；支持单图生成、图片编辑、参考图和指定 PNG 输出路径。
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill codex-imagegen
+```
+
+> 使用 $codex-imagegen 生成一张极简陶瓷咖啡杯的落地页主视觉，保存到项目的 assets/hero.png。
+
+### 🎨 vincent-illustrations · Vincent 正文配图
+
+把中文文章里的关键判断、流程、状态和隐喻转换成 16:9 极简线描概念草图。Skill 内置 Vincent 头像与线描角色板，会自动在 🗂️ 档案态和 💼 编辑态之间选择，以大量近白留白、冷静墨线、少量品牌点色，以及固定深板岩蓝外套与暖肤色，让 Vincent 亲自搬、接、拆、搭建或操作核心概念，而不是把头像当装饰。
+
+[查看 Vincent 全身角色板](skills/vincent-illustrations/assets/vincent-character-sheet.png)
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill vincent-illustrations
+```
+
+> 使用 $vincent-illustrations 为这篇中文文章规划并直接生成 4 张 Vincent IP 正文配图。
+
+第一版聚焦 16:9 正文插图；3:4 小红书封面继续使用 `rednote-cover-gen`，头像转换使用 `artifact-template-warm-paper`。该 Skill 单独采用 CC BY-NC-SA 4.0，详细归属见其 `NOTICE.md`。
+
+### 🕹️ vincent-pixel · Vincent 等距像素配图
+
+把中文文章里的关键判断、流程和隐喻转换成 16:9 等距 16-bit 像素场景。支持文章封面和正文配图，使用清晰硬边像素、精准 2:1 等距几何、鲜明受控的调色板和温暖愉快的微缩工作室氛围，并让固定 Vincent 像素角色亲自完成核心动作。
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill vincent-pixel
+```
+
+> 使用 $vincent-pixel 为这篇中文文章生成一张无字封面和 4 张正文配图，保留等距 16-bit 像素风格与 Vincent IP 一致性。
+
+Midjourney 路径会追加 `--ar 16:9 --v 6.1 --style raw`；原生 ImageGen 会把同一要求转换为自然语言像素约束，不混用平台参数。
+
 ### 📝 format-knowledge-notes · 知识提炼与 Markdown 排版
 
 将原始文本、会议记录、资料摘录、产品分析或已有 Markdown 提炼并排版为高信息密度、强结构、易扫描的知识笔记。支持整理笔记、提炼要点、压缩长文、去重重组，以及生成适合 Obsidian、Notion 或 GitHub README 的内容；也支持仅优化排版而不改写原文。

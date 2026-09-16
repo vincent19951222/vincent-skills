@@ -1,0 +1,7 @@
+interface:
+  display_name: "Vincent 正文配图"
+  short_description: "为中文文章生成 Vincent IP 极简线描正文配图"
+  icon_large: "./assets/vincent-avatar.png"
+  default_prompt: "Use $vincent-illustrations 为这篇中文文章设计并生成 Vincent IP 正文配图。"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Vincent Pixel 配图"
+  short_description: "生成 Vincent IP 等距像素封面、正文与卡片内嵌配图"
+  icon_large: "./assets/vincent-avatar.png"
+  default_prompt: "Use $vincent-pixel 为这篇中文内容生成适配公众号、博客或小红书 HTML 卡片内嵌使用的 Vincent IP 等距像素配图。"
+policy:
+  allow_implicit_invocation: true

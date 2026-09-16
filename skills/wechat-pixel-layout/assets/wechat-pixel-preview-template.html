@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>__WECHAT_PIXEL_DOCUMENT_TITLE__ - WeChat Pixel Preview</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --paper: #fff9ed;
+      --accent: #ff4757;
+      --yellow: #ffd700;
+      --mint: #00e099;
+      --desk: #f4e4c1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26, 26, 26, 0.06) 1px, transparent 1px),
+        var(--desk);
+      background-size: 18px 18px;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .layout {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      display: grid;
+      grid-template-columns: minmax(320px, 430px) minmax(280px, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .toolbar {
+      border: 4px solid var(--ink);
+      background: var(--paper);
+      box-shadow: 8px 8px 0 var(--ink);
+      padding: 18px;
+      position: sticky;
+      top: 20px;
+    }
+
+    .toolbar h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .toolbar p {
+      margin: 12px 0 0;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .copy-button {
+      width: 100%;
+      margin-top: 18px;
+      border: 3px solid var(--ink);
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 5px 5px 0 var(--ink);
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .copy-button:active {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .phone-container {
+      width: min(430px, 100%);
+      margin: 0 auto;
+      border: 5px solid var(--ink);
+      background: #111827;
+      box-shadow: 10px 10px 0 var(--ink);
+      padding: 16px;
+    }
+
+    .phone-speaker {
+      width: 96px;
+      height: 8px;
+      margin: 0 auto 14px;
+      border: 2px solid #020617;
+      background: #374151;
+    }
+
+    .phone-screen {
+      height: min(760px, calc(100vh - 92px));
+      overflow: auto;
+      background: #fff;
+      padding: 16px;
+    }
+
+    .source-box {
+      border: 4px solid var(--ink);
+      background: #ffffff;
+      box-shadow: 8px 8px 0 var(--ink);
+      padding: 18px;
+    }
+
+    .source-box h2 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .source-box pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      max-height: 640px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #334155;
+    }
+
+    @media (max-width: 860px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="layout">
+    <section>
+      <div class="phone-container">
+        <div class="phone-speaker"></div>
+        <div id="preview-root" class="phone-screen"></div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="toolbar">
+        <h1 id="doc-title">__WECHAT_PIXEL_DOCUMENT_TITLE__</h1>
+        <p>预览区域使用固定的经典像素 theme 01。点击按钮后，剪贴板会收到富文本 HTML，可直接粘贴到微信公众号后台草稿。</p>
+        <button id="copy-button" class="copy-button" type="button">复制富文本 HTML</button>
+        <div id="copy-status" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="source-box" style="margin-top: 28px;">
+        <h2>Markdown Source</h2>
+        <pre id="markdown-source"></pre>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+__MARKED_MIN_JS__
+  </script>
+  <script>
+    const MARKDOWN_SOURCE = __WECHAT_PIXEL_MARKDOWN_JSON__;
+    const THEME = __WECHAT_PIXEL_THEME_JSON__;
+
+    const previewRoot = document.getElementById("preview-root");
+    const statusNode = document.getElementById("copy-status");
+
+    function cssName(name) {
+      return name.replace(/[A-Z]/g, (char) => "-" + char.toLowerCase());
+    }
+
+    function styleToString(style) {
+      if (!style) return "";
+      return Object.entries(style)
+        .filter(([, value]) => value !== undefined && value !== null && value !== "")
+        .map(([key, value]) => `${cssName(key)}:${value}`)
+        .join(";");
+    }
+
+    function applyStyle(element, style) {
+      const value = styleToString(style);
+      if (value) element.setAttribute("style", value);
+      return element;
+    }
+
+    function createElement(tag, style, attrs = {}) {
+      const element = document.createElement(tag);
+      applyStyle(element, style);
+      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+      return element;
+    }
+
+    function renderChildren(source, target) {
+      Array.from(source.childNodes).forEach((child) => target.appendChild(renderNode(child)));
+      return target;
+    }
+
+    function renderInlineChildren(source, target) {
+      Array.from(source.childNodes).forEach((child) => {
+        if (child.nodeType === Node.ELEMENT_NODE && child.tagName.toLowerCase() === "p") {
+          Array.from(child.childNodes).forEach((nested) => target.appendChild(renderNode(nested)));
+        } else {
+          target.appendChild(renderNode(child));
+        }
+      });
+      return target;
+    }
+
+    function renderCodeBlock(element) {
+      const code = element.querySelector("code");
+      const block = createElement("section", {
+        ...THEME.pre,
+        display: "block",
+        width: "100%",
+        minWidth: "100%",
+        boxSizing: "border-box"
+      }, { "data-wechat-code-block": "true" });
+
+      const header = createElement("section", THEME.preHeader, { "data-wechat-code-header": "true" });
+      ["#FF4757", "#FFD700", "#00E099"].forEach((color) => {
+        header.appendChild(createElement("section", { ...THEME.preDot, backgroundColor: color }));
+      });
+
+      const label = createElement("span", {
+        marginLeft: "auto",
+        color: "#00E099",
+        fontFamily: "'Courier New'",
+        fontSize: "12px"
+      }, { "data-wechat-code-label": "true" });
+      label.textContent = "代码片段";
+      header.appendChild(label);
+
+      const body = createElement("section", THEME.preBody, { "data-wechat-code-body": "true" });
+      const codeNode = createElement("code", null, { "data-wechat-code-content": "true" });
+      codeNode.textContent = code ? code.textContent.replace(/\n$/, "") : "";
+      body.appendChild(codeNode);
+
+      block.appendChild(header);
+      block.appendChild(body);
+      return block;
+    }
+
+    function renderList(element, ordered) {
+      const list = createElement(ordered ? "ol" : "ul", ordered ? THEME.ol : THEME.ul);
+      const colors = ["#FF4757", "#FFD700", "#00E099"];
+
+      Array.from(element.children).forEach((item, index) => {
+        if (item.tagName.toLowerCase() !== "li") return;
+        const li = createElement("li", ordered ? THEME.liOl : THEME.liUl);
+        const marker = createElement("span", ordered ? THEME.olMarker : { ...THEME.ulMarker, backgroundColor: colors[index % colors.length] });
+        marker.textContent = ordered ? String(index + 1) : "";
+        const content = createElement("span", { flex: 1 });
+        renderInlineChildren(item, content);
+        li.appendChild(marker);
+        li.appendChild(content);
+        list.appendChild(li);
+      });
+
+      return list;
+    }
+
+    function renderTable(element) {
+      const wrapper = createElement("div", THEME.tableContainer || {
+        margin: "20px 0",
+        border: "2px solid #1a1a1a",
+        overflowX: "auto",
+        width: "100%",
+        display: "block",
+        boxSizing: "border-box"
+      });
+      const table = createElement("table", THEME.table || { width: "100%", borderCollapse: "collapse" });
+      renderChildren(element, table);
+      wrapper.appendChild(table);
+      return wrapper;
+    }
+
+    function renderNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return document.createTextNode(node.textContent);
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return document.createTextNode("");
+      }
+
+      const tag = node.tagName.toLowerCase();
+
+      if (tag === "h1") {
+        const container = createElement("section", THEME.h1Container, { "data-wechat-title-container": "true" });
+        container.appendChild(renderChildren(node, createElement("h1", THEME.h1)));
+        const subtitle = createElement("p", THEME.h1Subtitle);
+        subtitle.textContent = THEME.meta && THEME.meta.description ? THEME.meta.description : "演示版本 3.3 | 排版实验室";
+        container.appendChild(subtitle);
+        return container;
+      }
+
+      if (tag === "h2") {
+        const container = createElement("section", THEME.h2Container);
+        container.appendChild(renderChildren(node, createElement("h2", THEME.h2)));
+        return container;
+      }
+
+      if (tag === "h3") {
+        const container = createElement("section", THEME.h3Container, { "data-wechat-h3-container": "true" });
+        container.appendChild(createElement("span", THEME.h3Badge, { "data-wechat-h3-badge": "true" }));
+        container.appendChild(renderChildren(node, createElement("h3", THEME.h3, { "data-wechat-h3-title": "true" })));
+        return container;
+      }
+
+      if (tag === "h4") return renderChildren(node, createElement("h4", THEME.h4));
+      if (tag === "h5") return renderChildren(node, createElement("h5", THEME.h5 || { ...THEME.h4, borderLeftColor: "#00E099" }));
+      if (tag === "p") return renderChildren(node, createElement("p", THEME.p));
+      if (tag === "strong") return renderChildren(node, createElement("strong", THEME.strong));
+      if (tag === "em") return renderChildren(node, createElement("em", THEME.em || { fontStyle: "italic", color: "#888" }));
+      if (tag === "mark") return renderChildren(node, createElement("mark", {
+        backgroundColor: "#FFF5AA",
+        color: "#1a1a1a",
+        padding: "0 3px",
+        borderBottom: "2px solid #FFD700"
+      }));
+      if (tag === "code") return renderChildren(node, createElement("code", THEME.code));
+
+      if (tag === "a") {
+        const link = createElement("a", THEME.a, { href: node.getAttribute("href") || "#" });
+        return renderChildren(node, link);
+      }
+
+      if (tag === "img") {
+        return createElement("img", {
+          maxWidth: "100%",
+          height: "auto",
+          display: "block",
+          margin: "16px auto",
+          ...(THEME.img || {})
+        }, {
+          src: node.getAttribute("src") || "",
+          alt: node.getAttribute("alt") || ""
+        });
+      }
+
+      if (tag === "pre") return renderCodeBlock(node);
+      if (tag === "blockquote") {
+        const labelNode = node.querySelector("[data-wechat-quote-label]");
+        const labelText = labelNode ? labelNode.getAttribute("data-wechat-quote-label") : "";
+        if (labelNode) {
+          const labelParagraph = labelNode.closest("p");
+          if (labelParagraph && labelParagraph.textContent.trim() === "") {
+            labelParagraph.remove();
+          } else {
+            labelNode.remove();
+          }
+        }
+        const quote = createElement("blockquote", THEME.blockquote, { "data-wechat-blockquote": "true" });
+        const badge = createElement("section", THEME.blockquoteBadge, { "data-wechat-blockquote-badge": "true" });
+        badge.textContent = labelText || (THEME.meta && THEME.meta.blockquoteLabel) || "引用";
+        const content = createElement("section", THEME.blockquoteContent, { "data-wechat-blockquote-content": "true" });
+        renderChildren(node, content);
+        quote.appendChild(badge);
+        quote.appendChild(content);
+        return quote;
+      }
+
+      if (tag === "ul") return renderList(node, false);
+      if (tag === "ol") return renderList(node, true);
+      if (tag === "table") return renderTable(node);
+      if (tag === "thead") return renderChildren(node, createElement("thead", THEME.thead || { backgroundColor: "#1a1a1a", color: "#00E099" }));
+      if (tag === "tbody") return renderChildren(node, document.createElement("tbody"));
+      if (tag === "tr") return renderChildren(node, document.createElement("tr"));
+      if (tag === "th") {
+        const theadStyle = THEME.thead || { backgroundColor: "#1a1a1a", color: "#00E099" };
+        return renderChildren(node, createElement("th", {
+          ...(THEME.th || { padding: "10px", border: "1px solid #333", fontFamily: "'Courier New', monospace" }),
+          backgroundColor: theadStyle.backgroundColor || "#1a1a1a",
+          color: (THEME.th && THEME.th.color) || theadStyle.color || "#00E099",
+          textAlign: "center"
+        }));
+      }
+      if (tag === "td") return renderChildren(node, createElement("td", {
+        color: (THEME.td && THEME.td.color) || (THEME.p && THEME.p.color) || "#1a1a1a",
+        backgroundColor: (THEME.td && THEME.td.backgroundColor) || (THEME.section && THEME.section.backgroundColor) || "#ffffff",
+        padding: "10px",
+        border: "1px solid #eee",
+        ...(THEME.td || {})
+      }));
+
+      if (tag === "hr") {
+        const container = createElement("section", THEME.hrContainer, { "data-wechat-hr": "true" });
+        const text = createElement("span", THEME.hrText, { "data-wechat-hr-text": "true" });
+        text.textContent = "•••••";
+        container.appendChild(text);
+        return container;
+      }
+
+      return renderChildren(node, document.createElement(tag));
+    }
+
+    function renderFooter() {
+      const footerType = THEME.meta && THEME.meta.footerType ? THEME.meta.footerType : "none";
+      const footer = createElement("section", THEME.footer);
+
+      if (footerType === "pixel") {
+        const icon = createElement("section", THEME.footerIcon);
+        icon.textContent = "🎮";
+        const title = createElement("h4", { margin: "0", fontSize: "16px", color: "#1a1a1a" });
+        title.textContent = THEME.meta && THEME.meta.author ? THEME.meta.author : "排版实验室";
+        const subtitle = createElement("p", {
+          fontSize: "12px",
+          color: "#999",
+          margin: "5px 0 20px 0",
+          fontFamily: "'Courier New', monospace"
+        });
+        subtitle.textContent = "由 AI 和猫猫共同构建";
+        const ctaWrap = createElement("section", { textAlign: "center" });
+        const ctaHeading = createElement("h2", THEME.h2);
+        const cta = createElement("a", { color: "#ffffff", textDecoration: "none", borderBottom: "none" }, { href: "#" });
+        cta.textContent = "投币关注";
+        ctaHeading.appendChild(cta);
+        ctaWrap.appendChild(ctaHeading);
+        footer.appendChild(icon);
+        footer.appendChild(title);
+        footer.appendChild(subtitle);
+        footer.appendChild(ctaWrap);
+        return footer;
+      }
+
+      if (footerType === "classic") {
+        const text = createElement("p", THEME.footerText);
+        text.textContent = `© ${new Date().getFullYear()} ${(THEME.meta && THEME.meta.author) || "排版实验室"}. 版权所有.`;
+        footer.appendChild(text);
+        return footer;
+      }
+
+      return footer;
+    }
+
+    function renderArticle() {
+      document.getElementById("markdown-source").textContent = MARKDOWN_SOURCE;
+      if (!window.marked) {
+        previewRoot.innerHTML = "<p>Markdown renderer failed to load. Check the network and refresh this file.</p>";
+        return;
+      }
+
+      const parsed = document.createElement("template");
+      parsed.innerHTML = marked.parse(MARKDOWN_SOURCE, { gfm: true, breaks: false });
+      const articleTitle = parsed.content.querySelector("h1")?.textContent.trim()
+        || document.getElementById("doc-title").textContent.trim();
+
+      const wrapper = createElement("section", THEME.wrapper, { id: "wechat-output" });
+      const headerType = THEME.meta && THEME.meta.headerType ? THEME.meta.headerType : "none";
+
+      if (headerType === "pixel") {
+        const header = createElement("section", THEME.headerBar);
+        const left = createElement("div", THEME.headerBarLeft);
+        const mood = createElement("span", THEME.headerMood);
+        mood.textContent = `▶ ${articleTitle}`;
+        const wifi = createElement("span", THEME.headerWifi);
+        wifi.textContent = "📡 灵感在线";
+        left.appendChild(mood);
+        left.appendChild(wifi);
+
+        const right = createElement("div", THEME.headerBarRight);
+        const power = createElement("span", THEME.headerPower);
+        power.textContent = "已存档";
+        const battery = createElement("div", THEME.headerBatteryBody);
+        battery.appendChild(createElement("div", THEME.headerBatteryLevel));
+        right.appendChild(power);
+        right.appendChild(battery);
+        header.appendChild(left);
+        header.appendChild(right);
+        wrapper.appendChild(header);
+      }
+
+      const section = createElement("section", THEME.section);
+      Array.from(parsed.content.childNodes).forEach((node) => section.appendChild(renderNode(node)));
+      section.appendChild(renderFooter());
+      wrapper.appendChild(section);
+
+      const footerType = THEME.meta && THEME.meta.footerType ? THEME.meta.footerType : "none";
+      if (footerType !== "pixel-api-safe") {
+        const copyright = createElement("section", {
+          textAlign: "center",
+          paddingBottom: "20px",
+          fontSize: "12px",
+          color: "#ccc",
+          fontFamily: "monospace"
+        });
+        copyright.textContent = `© ${new Date().getFullYear()} ${(THEME.meta && THEME.meta.author) || "排版实验室"}. 版权所有.`;
+        wrapper.appendChild(copyright);
+      }
+
+      previewRoot.innerHTML = "";
+      previewRoot.appendChild(wrapper);
+    }
+
+    function selectAndCopy(node) {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNode(node);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      const ok = document.execCommand("copy");
+      selection.removeAllRanges();
+      return ok;
+    }
+
+    async function copyRichHtml() {
+      const node = document.getElementById("wechat-output");
+      if (!node) return;
+
+      const html = node.outerHTML;
+      try {
+        if (navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([html], { type: "text/html" }),
+              "text/plain": new Blob([node.innerText], { type: "text/plain" })
+            })
+          ]);
+        } else if (!selectAndCopy(node)) {
+          throw new Error("copy failed");
+        }
+        statusNode.textContent = "已复制。现在可以粘贴到微信公众号后台草稿。";
+      } catch (error) {
+        if (selectAndCopy(node)) {
+          statusNode.textContent = "已通过兼容方式复制。现在可以粘贴到微信公众号后台草稿。";
+        } else {
+          statusNode.textContent = "浏览器阻止了复制，请手动选中预览区域复制。";
+        }
+      }
+    }
+
+    document.getElementById("copy-button").addEventListener("click", copyRichHtml);
+    renderArticle();
+  </script>
+</body>
+</html>

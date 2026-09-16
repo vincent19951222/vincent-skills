@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex ImageGen Bridge"
+  short_description: "让缺少原生生图工具的 Agent 通过本机 Codex 生成或编辑图片"
+  default_prompt: "使用 $codex-imagegen 通过本机 Codex CLI 生成一张图片并保存到我的项目中。"
