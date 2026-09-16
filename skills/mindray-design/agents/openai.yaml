@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mindray Design"
+  short_description: "Create Mindray interactive presentation interfaces"
+  brand_color: "#C90000"
+  default_prompt: "Use $mindray-design to create a red-and-white interactive Mindray presentation page."
+policy:
+  allow_implicit_invocation: true
