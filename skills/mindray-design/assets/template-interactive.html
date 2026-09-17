@@ -1,58 +1,235 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>从总览，到细节 · Mindray 交互式演示</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mindray Interactive Scene Template</title>
 <style>
-:root{--bg:#f5f7f8;--surface:#fff;--ink:#1d2630;--muted:#586572;--line:#d9e0e5;--brand-primary:#c90000;--brand-primary-soft:#fff0f0;--radius:6px;--ease:cubic-bezier(.16,1,.3,1)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "PingFang SC","Noto Sans SC",sans-serif}button{font:inherit;color:inherit;cursor:pointer}button:disabled{cursor:default;opacity:.45}[hidden]{display:none!important}a{color:var(--brand-primary)}
-:where(button,a,summary):focus-visible{outline:3px solid var(--brand-primary);outline-offset:4px}button:active:not(:disabled){transform:scale(.98)}
-.deck{max-width:1600px;margin:auto;min-height:100dvh;background:var(--surface);padding:28px clamp(20px,6vw,96px);display:flex;flex-direction:column}
-.top{display:flex;justify-content:space-between;gap:24px;align-items:center;padding-bottom:24px;border-bottom:1px solid var(--line)}
-.logo{position:relative;width:180px;aspect-ratio:1106/198;overflow:hidden;flex-shrink:0}.logo img{position:absolute;width:150.723%;height:auto;max-width:none;left:-25.316%;top:-265.657%}
-.top-label{font-size:13px;color:var(--muted)}.scene{flex:1;padding:56px 0 40px;min-width:0}.scene h1{font-size:clamp(34px,4.6vw,72px);line-height:1.2;letter-spacing:-.04em;margin:0 0 20px;max-width:960px}.intro{max-width:720px;font-size:18px;color:var(--muted);margin:0}.accent{color:var(--brand-primary)}
-.canvas{margin-top:40px;padding:40px 32px 28px;border:1px solid var(--line);border-radius:8px;background-color:var(--bg);background-image:radial-gradient(rgba(148,163,184,.24) 1px,transparent 1px);background-size:24px 24px}
-.canvas-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:28px;font-size:13px;color:var(--muted)}
-.nodes{display:grid;grid-template-columns:minmax(0,1fr) 48px minmax(0,1.12fr) 48px minmax(0,1fr);align-items:center}
-.node{min-width:0;min-height:168px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:24px;text-align:left;position:relative;transition:transform .18s var(--ease)}.node::before{content:"";position:absolute;inset:-1px;border:1px solid var(--brand-primary);border-radius:inherit;opacity:0;pointer-events:none}.node:hover{transform:translateY(-2px)}.node:hover::before{opacity:.45}.node[aria-pressed="true"]{background:var(--brand-primary-soft)}.node[aria-pressed="true"]::before{opacity:1}.node strong{display:block;font-size:clamp(20px,2vw,28px);line-height:1.3;margin:12px 0}.role{font-size:12px;color:var(--muted)}.node-description{font-size:14px;color:var(--muted)}
-.edge{position:relative;height:1px;background:#aab5bf;margin:0 5px;color:#778691}.edge::after{content:"";position:absolute;right:0;top:-3px;border-width:3.5px 0 3.5px 5px;border-style:solid;border-color:transparent transparent transparent currentColor}.edge.selected{background:var(--brand-primary);color:var(--brand-primary)}.edge.selected::before{content:"";position:absolute;inset:-1px 0;background:var(--brand-primary);transform-origin:left;animation:path-in .4s var(--ease)}
-.selection{margin-top:28px;background:var(--surface);border-radius:var(--radius);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:24px}.selection-copy p{margin:0;color:var(--muted);font-size:14px}.selection-copy strong{font-size:18px}.primary,.secondary{border-radius:var(--radius);padding:10px 18px;white-space:nowrap;min-height:44px}.primary{background:var(--brand-primary);color:#fff;border:1px solid var(--brand-primary)}.secondary{background:var(--surface);border:1px solid var(--line)}
-.depth-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:64px}.depth-map article{border-top:2px solid var(--line);padding-top:24px}.depth-map h2{font-size:24px;margin:0 0 12px}.depth-map p{margin:0;color:var(--muted)}
-.bottom{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-top:20px;border-top:1px solid var(--line)}.scene-nav{display:flex;gap:8px;align-items:center}.scene-nav button{border:0;border-radius:var(--radius);background:transparent;min-width:44px;min-height:44px}.scene-nav button[aria-current="page"]{background:var(--brand-primary-soft);color:var(--brand-primary);font-weight:700}.nav-controls{display:flex;gap:8px}.caption{font-size:12px;color:var(--muted)}
-dialog{margin:0 0 0 auto;border:0;border-left:1px solid var(--line);width:min(480px,100%);max-width:100%;height:100dvh;max-height:100dvh;padding:32px;background:var(--surface);color:var(--ink);box-shadow:-16px 0 48px #1d263018;overflow-y:auto}dialog::backdrop{background:rgb(29 38 48 / 24%)}.drawer-top{display:flex;justify-content:space-between;align-items:center;gap:24px;font-size:13px;color:var(--muted)}dialog h2{font-size:36px;line-height:1.2;letter-spacing:-.04em;margin:40px 0 32px}dialog h3{font-size:16px;margin:24px 0 8px}dialog p{margin:0;color:var(--muted)}dialog details{margin-top:32px;border-top:1px solid var(--line);padding-top:20px}summary{cursor:pointer;font-weight:600}details p{margin-top:16px}details a{display:inline-block;margin-top:12px}.example-note{margin-top:32px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
-@keyframes path-in{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@media(max-width:900px){.scene{padding-top:40px}.canvas{padding:24px 20px}.nodes{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) 28px minmax(0,1fr)}.node{padding:16px}.top-label{font-size:12px}.depth-map{gap:20px}}
-@media(max-width:600px){.top{gap:16px}.logo{width:140px}.top-label{max-width:110px;text-align:right}.scene{padding:32px 0}.intro{font-size:16px}.canvas{margin-top:28px;padding:20px 16px}.canvas-head{align-items:flex-start}.nodes{grid-template-columns:minmax(0,1fr)}.node{min-height:112px;width:100%}.edge{height:24px;width:1px;margin:5px auto}.edge::after{right:-3px;top:auto;bottom:0;border-width:5px 3.5px 0;border-color:currentColor transparent transparent}.edge.selected::before{inset:0 -1px;transform-origin:top;animation:none}.selection{padding:16px;flex-direction:column;align-items:stretch;gap:16px}.depth-map{grid-template-columns:1fr;margin-top:36px;gap:32px}.bottom{flex-wrap:wrap;gap:12px}.caption{flex-basis:100%}.nav-controls{margin-left:auto}dialog{padding:24px}}
-@media(prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}.node:hover{transform:none}}
+:root{
+  --red:#c90000; --red-soft:#fdeeee; --ink:#1d2630; --muted:#697480;
+  --line:#dbe1e6; --hairline:rgba(148,163,184,.28); --surface:#fff; --canvas:#f5f7f8;
+  --mono:"JetBrains Mono","SFMono-Regular",ui-monospace,Menlo,monospace;
+  --sans:"PingFang SC","Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
+  --r:6px; --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans)}
+button{font:inherit;color:inherit}
+.deck{min-height:100dvh;display:grid;grid-template-columns:76px minmax(0,1fr);background:var(--surface)}
+
+/* 章节轨道：纯页码导航 */
+.rail{border-right:1px solid var(--line);padding:26px 0;display:flex;flex-direction:column;align-items:center;gap:16px}
+.rail button{border:0;background:none;color:#9aa3ab;cursor:pointer;padding:6px;font:12px var(--mono)}
+.rail button.active{color:var(--red);font-weight:700}
+
+/* 顶栏：品牌 Logo 主位 + 档案语境 + 计数器 */
+.main{min-width:0;padding:36px clamp(28px,5vw,80px) 30px;position:relative}
+.top{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.top .brand{height:24px;width:auto;display:block}
+.top .context{font:700 12px var(--mono);letter-spacing:.14em;color:var(--red)}
+.top .counter{margin-left:auto;font:12px var(--mono);color:var(--muted);white-space:nowrap}
+
+/* Scene：一屏一个核心问题 */
+.scene{display:none;position:relative;min-height:calc(100dvh - 140px);padding-top:clamp(40px,6.5vh,80px);padding-bottom:64px}
+.scene.active{display:block}
+.scene h1{font-size:clamp(36px,5.4vw,70px);line-height:1.14;letter-spacing:-.02em;max-width:760px;margin:0 0 22px}
+.scene h1 em{font-style:normal;color:var(--red)}
+.intro{font-size:17px;line-height:1.8;color:var(--muted);max-width:600px;margin:0}
+.question{position:absolute;right:0;top:clamp(40px,6.5vh,80px);width:226px;color:var(--muted);font-size:13px;line-height:1.7;border-top:2px solid var(--red);padding-top:12px}
+.question strong{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
+.foot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;gap:16px;color:var(--muted);font:12px var(--mono)}
+.foot b{color:var(--red);font-weight:400}
+
+/* FLOW：Dot Grid 画布 + 路径 + 节点 */
+.flow-wrap{position:relative;margin-top:44px;max-width:940px;padding:34px 30px 40px}
+.flow-wrap::before{content:"";position:absolute;inset:0;z-index:0;border-radius:var(--r);
+  background-image:radial-gradient(var(--hairline) 1.2px,transparent 1.2px);background-size:24px 24px}
+.flow-line{position:absolute;z-index:0;top:76px;left:9%;right:9%;height:2px;background:var(--line)}
+.flow-line i{display:block;height:100%;width:16%;background:var(--red);transition:width .45s var(--ease)}
+.nodes{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.node{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:20px;text-align:left;cursor:pointer;min-height:148px;
+  transition:border-color .16s var(--ease),background .16s var(--ease),transform .16s var(--ease)}
+.node:hover{border-color:#aeb8c0;transform:translateY(-2px)}
+.node.active{border-color:var(--red);background:var(--red-soft);transform:translateY(-3px)}
+.node small{display:block;font:11px var(--mono);letter-spacing:.08em;color:var(--red);margin-bottom:26px}
+.node strong{display:block;font-size:21px}
+.node span{display:block;margin-top:7px;font-size:13px;color:var(--muted)}
+
+/* 原地展开：短判断不进抽屉 */
+.callouts{display:grid;gap:4px;margin-top:36px;max-width:640px}
+.callout{border:0;border-top:2px solid var(--line);background:none;text-align:left;padding:14px 10px 14px 2px;cursor:pointer;border-radius:0 0 var(--r) var(--r);
+  transition:border-color .16s var(--ease),background .16s var(--ease)}
+.callout:hover{background:var(--canvas)}
+.callout.open{border-top-color:var(--red);background:var(--red-soft)}
+.callout b{display:flex;gap:12px;align-items:baseline;font-size:16px;margin-bottom:5px}
+.callout b i{font:400 12px var(--mono);font-style:normal;color:var(--red)}
+.callout .chev{margin-left:auto;font:12px var(--mono);color:#9aa3ab;transition:transform .25s var(--ease)}
+.callout.open .chev{transform:rotate(45deg);color:var(--red)}
+.callout p{margin:0;font-size:13px;color:var(--muted);line-height:1.7}
+.callout .more{display:block;max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+.callout .more p{margin-top:10px}
+.callout .more .src{display:block;margin:12px 0 2px;font:11px var(--mono);color:#9aa3ab}
+.callout.open .more{max-height:240px}
+
+/* Drawer：只承载长解释与来源 */
+.scrim{position:fixed;z-index:4;inset:0;background:rgba(29,38,48,.32);opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:5;right:0;top:0;bottom:0;width:min(460px,100vw);background:var(--surface);
+  border-left:1px solid var(--line);box-shadow:-18px 0 48px rgba(29,38,48,.14);
+  transform:translateX(102%);transition:transform .42s var(--ease);padding:34px 36px;display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer-close{align-self:flex-end;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);width:36px;height:36px;cursor:pointer;font-size:16px;line-height:1}
+.drawer-close:hover{border-color:var(--red);color:var(--red)}
+.drawer-kicker{font:11px var(--mono);letter-spacing:.12em;color:var(--red);margin:38px 0 14px}
+.drawer h2{font-size:30px;letter-spacing:-.01em;margin:0 0 18px}
+.drawer p{color:var(--muted);line-height:1.85;margin:0 0 14px}
+.drawer-source{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;font-size:12px;color:var(--muted);line-height:1.7}
+
+.rail button:focus-visible,.node:focus-visible,.callout:focus-visible,.drawer-close:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+@media (prefers-reduced-motion:no-preference){
+  .scene.active .rise{animation:rise .45s var(--ease) both;animation-delay:calc(var(--i,0)*70ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+@media (max-width:640px){
+  .deck{grid-template-columns:1fr}
+  .rail{display:none}
+  .top .brand{height:18px}
+  .top .context{font-size:10px;letter-spacing:.08em}
+  .main{padding:22px 20px 26px}
+  .scene{padding-top:44px}
+  .question{position:static;width:auto;margin:30px 0 0}
+  .flow-wrap{margin-top:32px;padding:0}
+  .flow-wrap::before,.flow-line{display:none}
+  .nodes{grid-template-columns:1fr;gap:12px}
+  .node{min-height:0}
+  .foot{position:static;margin-top:36px}
+  .drawer{padding:26px 24px}
+}
 </style>
-</head><body>
-<main class="deck" aria-label="Mindray 交互式演示样板">
-<header class="top"><div class="logo"><img src="mindray-lockup.png" alt="mindray 迈瑞" width="1667" height="1250"></div><span class="top-label">交互式演示样板 · 示意内容</span></header>
-<section class="scene" data-scene="0" aria-labelledby="flow-title">
-<h1 id="flow-title">沿着数据路径，<span class="accent">理解系统。</span></h1><p class="intro">先看设备、网关与平台的关系，再选择一个节点，展开它在链路中的作用。</p>
-<div class="canvas"><div class="canvas-head"><span>设备 → 网关 → 平台</span><span>选择节点，查看关联路径</span></div>
-<div class="nodes" aria-label="示意数据链路">
-<button class="node" data-node="device" aria-pressed="false" aria-controls="selection"><span class="role">数据来源</span><strong>医疗设备</strong><span class="node-description">产生数据</span></button><span class="edge selected" data-edge="device-gateway" aria-hidden="true"></span>
-<button class="node" data-node="gateway" aria-pressed="true" aria-controls="selection"><span class="role">中间环节</span><strong>eGateway</strong><span class="node-description">连接两端</span></button><span class="edge selected" data-edge="gateway-platform" aria-hidden="true"></span>
-<button class="node" data-node="platform" aria-pressed="false" aria-controls="selection"><span class="role">数据去向</span><strong>mi-ICU</strong><span class="node-description">使用数据</span></button></div>
-<div class="selection" id="selection"><div class="selection-copy" aria-live="polite"><strong id="selected-title">eGateway</strong><p id="selected-copy">在示意链路中连接设备与平台，选择后突出两侧关系。</p></div><button class="primary" id="open-detail" aria-haspopup="dialog" aria-controls="detail-drawer">展开详情</button></div></div>
-</section>
-<section class="scene" data-scene="1" aria-labelledby="depth-title" hidden><h1 id="depth-title">每次展开，<span class="accent">多理解一层。</span></h1><p class="intro">把信息安排在观众需要它的位置，让总览、解释和依据始终保持联系。</p><div class="depth-map"><article><h2>先理解关系</h2><p>主画面呈现观点与结构。即使停止动画，也能看懂数据流向。</p></article><article><h2>再解释作用</h2><p>选中对象后，展开它是什么、为什么存在，以及如何连接整体。</p></article><article><h2>最后核对依据</h2><p>版本、来源与例子进入更深层，读完仍能回到原来的位置。</p></article></div></section>
-<footer class="bottom"><span class="caption">界面与关系为演示示例，非产品技术说明</span><nav class="scene-nav" aria-label="场景导航"><button data-go="0" aria-label="场景 1：系统关系" aria-current="page">1</button><button data-go="1" aria-label="场景 2：信息深度">2</button></nav><div class="nav-controls"><button class="secondary" id="prev" disabled>上一页</button><button class="secondary" id="next">下一页</button></div></footer>
+</head>
+<body>
+<main class="deck" aria-label="Mindray Interactive Presentation">
+  <nav class="rail" aria-label="Scene navigation">
+    <button class="active" data-go="0" aria-current="page">01</button>
+    <button data-go="1">02</button>
+  </nav>
+
+  <section class="main">
+    <header class="top">
+      <img class="brand" src="mindray-lockup-wide.png" alt="mindray 迈瑞">
+      <span class="context">MI-ICU / TRAINING ARCHIVE</span>
+      <span class="counter" aria-live="polite">01 / 02</span>
+    </header>
+
+    <!-- SCENE 01 · FLOW：长解释进 Drawer -->
+    <article class="scene active" data-scene="0" aria-labelledby="scene-1-title">
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>数据如何从设备进入临床平台？</aside>
+      <h1 id="scene-1-title" class="rise" style="--i:0">设备数据采集<br><em>从设备，到临床</em></h1>
+      <p class="intro rise" style="--i:1">默认只看见一条清楚的路径。点击节点，进入对应环节的解释和来源。</p>
+      <div class="flow-wrap rise" style="--i:2">
+        <div class="flow-line" aria-hidden="true"><i></i></div>
+        <div class="nodes">
+          <button class="node active" data-node="device" aria-haspopup="dialog"><small>01 / INPUT</small><strong>医疗设备</strong><span>床旁设备产生实时数据</span></button>
+          <button class="node" data-node="gateway" aria-haspopup="dialog"><small>02 / TRANSFORM</small><strong>eGateway</strong><span>协议适配与路由</span></button>
+          <button class="node" data-node="platform" aria-haspopup="dialog"><small>03 / OUTPUT</small><strong>mi-ICU 平台</strong><span>进入临床工作台</span></button>
+        </div>
+      </div>
+      <footer class="foot"><span>长解释与来源进入抽屉</span><b>01 / 02 · FLOW</b></footer>
+    </article>
+
+    <!-- SCENE 02 · 原地展开：短判断不进抽屉 -->
+    <article class="scene" data-scene="1" aria-labelledby="scene-2-title">
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>细节应该在哪一层展开？</aside>
+      <h1 id="scene-2-title" class="rise" style="--i:0">短判断，<em>原地展开</em></h1>
+      <p class="intro rise" style="--i:1">展开形式由内容决定：一两句判断就地展开，长解释和来源才进抽屉。</p>
+      <div class="callouts rise" style="--i:2">
+        <button class="callout" aria-expanded="false">
+          <b><i>01</i>接入状态<span class="chev">+</span></b>
+          <p>先说明设备是否在线，再展开协议与参数细节。</p>
+          <span class="more"><p>在线状态是可信度的前提：离线设备的数据不参与临床判断，先看状态再看数。</p><span class="src">来源示例：替换为实际课件文件与页码</span></span>
+        </button>
+        <button class="callout" aria-expanded="false">
+          <b><i>02</i>数据质量<span class="chev">+</span></b>
+          <p>把异常、缺失和延迟直接写在界面旁边。</p>
+          <span class="more"><p>异常、缺失和延迟标注在界面旁边，而不是藏进日志。读得懂状态标识，才谈得上信任数据。</p><span class="src">来源示例：替换为实际课件文件与页码</span></span>
+        </button>
+        <button class="callout" aria-expanded="false">
+          <b><i>03</i>临床动作<span class="chev">+</span></b>
+          <p>最终落到用户下一步要做什么。</p>
+          <span class="more"><p>界面信息最终指向一个动作：确认、记录，或处理报警。每个说明点都以「用户接下来做什么」收尾。</p><span class="src">来源示例：替换为实际课件文件与页码</span></span>
+        </button>
+      </div>
+      <footer class="foot"><span>SCENE TYPE / INLINE EXPAND</span><b>02 / 02 · PRINCIPLE</b></footer>
+    </article>
+  </section>
 </main>
-<dialog id="detail-drawer" aria-labelledby="drawer-title"><div class="drawer-top"><span>节点详情</span><button class="secondary" id="close-detail" autofocus>关闭详情</button></div><h2 id="drawer-title">eGateway</h2><h3>是什么</h3><p id="drawer-what"></p><h3>为什么需要关注</h3><p id="drawer-why"></p><h3>如何阅读这条关系</h3><p id="drawer-how"></p><details id="evidence"><summary>展开设计依据与示例边界</summary><p>本样板依据用户提供的 Interactive Presentation Design System v1.0，第 1.2 节的信息深度、第 4.4 节的节点关系与第 5.4 节的 Drawer 设计。</p><p>此处展示的是设计依据。设备、网关和平台仅用于演示界面行为，实际功能、协议和部署参数需另行核对产品资料。</p><a href="../references/source/interactive-presentation-v1.md" target="_blank" rel="noopener">查看设计原稿</a></details><div class="example-note">关闭详情，回到刚才的选择。</div></dialog>
+
+<div class="scrim" aria-hidden="true"></div>
+<aside class="drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-title" aria-hidden="true">
+  <button class="drawer-close" aria-label="关闭详情">×</button>
+  <div class="drawer-kicker" id="drawer-kicker">L2 / DETAIL</div>
+  <h2 id="drawer-title"></h2>
+  <div id="drawer-body"></div>
+  <p class="drawer-source" id="drawer-source"></p>
+</aside>
+
 <script>
-const scenes=[...document.querySelectorAll('.scene')],nav=[...document.querySelectorAll('button[data-go]')],nodes=[...document.querySelectorAll('button[data-node]')],edges=[...document.querySelectorAll('.edge')];
-const drawer=document.querySelector('#detail-drawer'),reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
-let sceneIndex=0,selected='gateway',opener=null;
-const content={
-device:{title:'医疗设备',short:'突出设备与网关之间的关系，先确认数据从哪里开始。',what:'示意链路的起点。此处代表产生数据的设备。',why:'理解下游之前，需要先明确数据来源及其边界。',how:'从设备沿连接线看到网关；具体数据类型与协议需核对产品材料。'},
-gateway:{title:'eGateway',short:'在示意链路中连接设备与平台，选择后突出两侧关系。',what:'示意链路的中间节点。此处用 eGateway 演示连接上下游的界面。',why:'把中间环节单独聚焦，可以同时看见来源和去向。',how:'两侧关系同步高亮。这里没有模拟真实传输或声明产品功能。'},
-platform:{title:'mi-ICU',short:'突出网关到平台的关系，关注数据最终进入哪里。',what:'示意链路的终点。此处用 mi-ICU 表达平台端。',why:'数据路径的终点帮助观众理解整条链路的用途。',how:'从网关沿连接线看到平台；具体界面及业务用途需使用真实截图解释。'}};
-function selectNode(key){selected=key;nodes.forEach(node=>node.setAttribute('aria-pressed',String(node.dataset.node===key)));edges.forEach(edge=>edge.classList.toggle('selected',edge.dataset.edge.split('-').includes(key)));document.querySelector('#selected-title').textContent=content[key].title;document.querySelector('#selected-copy').textContent=content[key].short;}
-function go(index){if(drawer.open)return;sceneIndex=Math.max(0,Math.min(scenes.length-1,index));scenes.forEach((scene,i)=>{scene.hidden=i!==sceneIndex;});nav.forEach(button=>{if(Number(button.dataset.go)===sceneIndex)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});document.querySelector('#prev').disabled=sceneIndex===0;document.querySelector('#next').disabled=sceneIndex===scenes.length-1;if(!reduceMotion.matches)scenes[sceneIndex].animate([{opacity:.3,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.16,1,.3,1)'});}
-nodes.forEach(node=>node.addEventListener('click',()=>selectNode(node.dataset.node)));nav.forEach(button=>button.addEventListener('click',()=>go(Number(button.dataset.go))));document.querySelector('#prev').addEventListener('click',()=>go(sceneIndex-1));document.querySelector('#next').addEventListener('click',()=>go(sceneIndex+1));
-document.querySelector('#open-detail').addEventListener('click',()=>{opener=nodes.find(node=>node.dataset.node===selected);const value=content[selected];document.querySelector('#drawer-title').textContent=value.title;for(const key of ['what','why','how'])document.querySelector('#drawer-'+key).textContent=value[key];document.querySelector('#evidence').open=false;drawer.showModal();drawer.scrollTop=0;if(!reduceMotion.matches)drawer.animate([{transform:'translateX(100%)'},{transform:'translateX(0)'}],{duration:400,easing:'cubic-bezier(.16,1,.3,1)'});});
-document.querySelector('#close-detail').addEventListener('click',()=>drawer.close());drawer.addEventListener('close',()=>opener?.focus());drawer.addEventListener('click',event=>{if(event.target===drawer){const r=drawer.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)drawer.close();}});
-document.addEventListener('keydown',event=>{if(drawer.open||event.altKey||event.ctrlKey||event.metaKey||event.target.closest('input,textarea,select,[contenteditable]'))return;if(['ArrowRight','PageDown','ArrowLeft','PageUp'].includes(event.key)){event.preventDefault();go(sceneIndex+(['ArrowRight','PageDown'].includes(event.key)?1:-1));}});
-</script></body></html>
+const scenes=[...document.querySelectorAll('.scene')], sceneButtons=[...document.querySelectorAll('[data-go]')];
+const nodes=[...document.querySelectorAll('.node')];
+const drawer=document.querySelector('.drawer'), scrim=document.querySelector('.scrim');
+const progress=document.querySelector('.flow-line i');
+const total=String(scenes.length).padStart(2,'0');
+let lastFocus=null;
+
+const detail={
+  device:{kicker:'L2 / DETAIL · 01 INPUT',title:'医疗设备',paras:['监护仪、呼吸机等床旁设备持续产生生命体征与设备状态数据。','它是整条链路的输入端：后续的清洗、路由和展示，都依赖这里的数据质量。'],source:'来源示例：请替换为实际课件文件和页码。当前为模板示例。'},
+  gateway:{kicker:'L2 / DETAIL · 02 TRANSFORM',title:'eGateway',paras:['eGateway 负责协议适配、数据清洗和初步路由。','它把不同厂商、不同协议的数据统一成平台可用的格式，是链路中最容易出问题的环节。'],source:'来源示例：请替换为实际课件文件和页码。当前为模板示例。'},
+  platform:{kicker:'L2 / DETAIL · 03 OUTPUT',title:'mi-ICU 平台',paras:['数据进入 mi-ICU 平台后，供临床工作站和业务模块使用。','记录、报警和决策支持都建立在前面两步的准确性之上。'],source:'来源示例：请替换为实际课件文件和页码。当前为模板示例。'}
+};
+
+function go(i){
+  closeDrawer(false);
+  scenes.forEach((s,n)=>s.classList.toggle('active',n===i));
+  sceneButtons.forEach((b,n)=>{b.classList.toggle('active',n===i);b.setAttribute('aria-current',n===i?'page':'false')});
+  document.querySelector('.counter').textContent=String(i+1).padStart(2,'0')+' / '+total;
+}
+function openNode(key,trigger){
+  const d=detail[key]; if(!d) return;
+  lastFocus=trigger;
+  nodes.forEach(n=>n.classList.toggle('active',n===trigger));
+  document.querySelector('#drawer-kicker').textContent=d.kicker;
+  document.querySelector('#drawer-title').textContent=d.title;
+  document.querySelector('#drawer-body').innerHTML=d.paras.map(p=>'<p>'+p+'</p>').join('');
+  document.querySelector('#drawer-source').textContent=d.source;
+  progress.style.width={device:'16%',gateway:'50%',platform:'84%'}[key]||'16%';
+  drawer.classList.add('open'); scrim.classList.add('open');
+  drawer.setAttribute('aria-hidden','false');
+  drawer.querySelector('.drawer-close').focus();
+}
+function closeDrawer(restore=true){
+  if(!drawer.classList.contains('open')) return;
+  drawer.classList.remove('open'); scrim.classList.remove('open');
+  drawer.setAttribute('aria-hidden','true');
+  if(restore && lastFocus) lastFocus.focus();
+}
+
+sceneButtons.forEach(b=>b.addEventListener('click',()=>go(Number(b.dataset.go))));
+nodes.forEach(n=>n.addEventListener('click',()=>openNode(n.dataset.node,n)));
+document.querySelectorAll('.callout').forEach(c=>c.addEventListener('click',()=>{
+  const open=c.classList.toggle('open');
+  c.setAttribute('aria-expanded',open?'true':'false');
+}));
+document.querySelector('.drawer-close').addEventListener('click',()=>closeDrawer());
+scrim.addEventListener('click',()=>closeDrawer());
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeDrawer();return}
+  if(drawer.classList.contains('open')) return;
+  if(e.key==='ArrowRight') go(1);
+  if(e.key==='ArrowLeft') go(0);
+});
+</script>
+</body>
+</html>

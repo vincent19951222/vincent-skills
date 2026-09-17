@@ -46,6 +46,16 @@ npx skills remove resume-stylist --global --agent codex --yes
 
 ## Skills 列表
 
+### 🏥 mindray-design · Mindray 交互式课件
+
+以 Scene 叙事 + L0-L3 信息深度制作 Mindray 风格的交互式 HTML 培训演示：一屏一个核心问题，默认展示观点与结构，点击逐层进入解释与证据。内置迈瑞 Logo 资产、Med-Tech Precision 视觉规范、L2 分型交互（抽屉 / 原地展开 / 指标解释带）与验证脚本。
+
+```bash
+npx skills add vincent19951222/vincent-skills --skill mindray-design
+```
+
+> 使用 $mindray-design 把这份培训课件做成一套可点击探索的交互式演示。
+
 ### 🖼️ codex-imagegen · Codex ImageGen 桥接器
 
 让没有原生生图工具的 Claude Code 或其他兼容 Agent，通过本机临时 `codex exec` 会话调用 Codex 内建 ImageGen。复用现有 Codex ChatGPT 登录，不要求 `OPENAI_API_KEY`；支持单图生成、图片编辑、参考图和指定 PNG 输出路径。
