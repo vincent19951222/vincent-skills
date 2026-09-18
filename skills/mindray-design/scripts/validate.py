@@ -6,7 +6,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 required = [
     ROOT / "SKILL.md", ROOT / "VERSION", ROOT / "README.md", ROOT / "components-preview.html",
-    ROOT / "assets/mindray-lockup.png", ROOT / "assets/mindray-lockup-wide.png", ROOT / "assets/template-deck.html", ROOT / "assets/template-interactive.html",
+    ROOT / "assets/mindray-lockup.png", ROOT / "assets/mindray-lockup-wide.png", ROOT / "assets/template-deck.html", ROOT / "assets/template-interactive.html", ROOT / "assets/demo.html",
     ROOT / "references/visual-system.md", ROOT / "references/components.md",
     ROOT / "references/layouts.md", ROOT / "references/assets.md",
     ROOT / "references/interactive-deck.md", ROOT / "references/checklist.md",
@@ -16,12 +16,15 @@ missing = [str(p.relative_to(ROOT)) for p in required if not p.exists()]
 if missing:
     raise SystemExit("Missing required files:\n" + "\n".join(missing))
 
-skill = (ROOT / "SKILL.md").read_text()
+skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 for ref in re.findall(r"\(references/([^\)]+)\)", skill):
     if not (ROOT / "references" / ref).exists():
         raise SystemExit(f"SKILL.md references missing file: references/{ref}")
-template = (ROOT / "assets/template-interactive.html").read_text()
+template = (ROOT / "assets/template-interactive.html").read_text(encoding="utf-8")
 for token in ("aria-label", "prefers-reduced-motion", "data-node", "drawer", "mindray-lockup-wide.png"):
     if token not in template:
         raise SystemExit(f"Template missing required behavior or asset token: {token}")
+for token in ('<dialog', 'id="detail-drawer"', "showModal", "aria-pressed", "aria-controls", 'data-edge', "hidden"):
+    if token not in template:
+        raise SystemExit(f"Template missing page-contract token: {token}")
 print(f"Mindray Design skill valid: {len(required)} required files, template checks passed.")

@@ -9,6 +9,8 @@
 3. FLOW 页的真实流程节点、抽屉解释和来源；
 4. 说明点的真实判断与来源行。
 
-更完整的六屏参考实现（INDEX / FLOW / SYSTEM 关系图 / DATA 指标 / COMPARE 对比 / PRODUCT）见 mi-ICU 内容项目的 `presentations/demo.html`，其中 Metric、Status Chip、Comparison、关系图连线高亮等形态已按 `references/components.md` 的实现状态标注，可按需移植。
+## 六屏参考实现
 
-模板当前只验证结构和交互。占位截图、示例标题和示例数据必须在交付前替换或明确标记。
+`../assets/demo.html` 是本 skill 内置的完整参考：INDEX / FLOW / SYSTEM（SVG 关系图连线高亮）/ DATA（Metric、Status Chip、指标解释带）/ COMPARE（差异高亮对比）/ PRODUCT（占位素材 + 空间热点 Inline Expand）。组件形态与 `../references/components.md` 的实现状态一一对应，可按需移植。
+
+模板与 demo 都只验证结构和交互。占位截图、示例标题和示例数据必须在交付前替换或明确标记。

@@ -4,6 +4,7 @@ Scene 叙事 + L0-L3 信息深度 + Med-Tech Precision。采用用户提供的 I
 
 - [SKILL.md](SKILL.md)：制作入口及按需阅读顺序。
 - [新 Scene 样板](assets/template-interactive.html)：两屏演示；节点选择、路径强调、详情抽屉与键盘返回。
+- [六屏参考实现](assets/demo.html)：INDEX / FLOW / SYSTEM / DATA / COMPARE / PRODUCT，覆盖 Metric、Status Chip、Comparison、SVG 关系图等 demo 级组件。
 - [原始方向文档](references/source/interactive-presentation-v1.md)：用户提供，原样保存。
 - [组件规范](references/components.md)：区分可运行组件与尚未实现的设计规则。
 - [旧组件预览](components-preview.html)：平面组件目录，尚未完整迁移到新 Scene 模型。

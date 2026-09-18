@@ -6,52 +6,55 @@
 <title>Mindray Interactive Scene Template</title>
 <style>
 :root{
-  --red:#c90000; --red-soft:#fdeeee; --ink:#1d2630; --muted:#697480;
-  --line:#dbe1e6; --hairline:rgba(148,163,184,.28); --surface:#fff; --canvas:#f5f7f8;
+  --bg:#F5F7F8; --surface:#FFFFFF; --ink:#1D2630; --muted:#586572; --line:#D9E0E5;
+  --brand-primary:#C90000; --brand-primary-soft:#FFF0F0;
+  --canvas-dot-color:rgba(148,163,184,.28); --canvas-dot-gap:24px;
   --mono:"JetBrains Mono","SFMono-Regular",ui-monospace,Menlo,monospace;
   --sans:"PingFang SC","Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
   --r:6px; --ease:cubic-bezier(.16,1,.3,1);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
 button{font:inherit;color:inherit}
 .deck{min-height:100dvh;display:grid;grid-template-columns:76px minmax(0,1fr);background:var(--surface)}
 
-/* 章节轨道：纯页码导航 */
+/* 章节轨道：纯页码导航，数字用 Mono */
 .rail{border-right:1px solid var(--line);padding:26px 0;display:flex;flex-direction:column;align-items:center;gap:16px}
 .rail button{border:0;background:none;color:#9aa3ab;cursor:pointer;padding:6px;font:12px var(--mono)}
-.rail button.active{color:var(--red);font-weight:700}
+.rail button.active{color:var(--brand-primary);font-weight:700}
 
-/* 顶栏：品牌 Logo 主位 + 档案语境 + 计数器 */
+/* 顶栏：品牌 Logo 主位 + 档案语境 + 计数器；文字标签用无衬线，计数器数字用 Mono */
 .main{min-width:0;padding:36px clamp(28px,5vw,80px) 30px;position:relative}
 .top{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px}
 .top .brand{height:24px;width:auto;display:block}
-.top .context{font:700 12px var(--mono);letter-spacing:.14em;color:var(--red)}
+.top .context{font:600 12px var(--sans);letter-spacing:.06em;color:var(--brand-primary)}
 .top .counter{margin-left:auto;font:12px var(--mono);color:var(--muted);white-space:nowrap}
 
-/* Scene：一屏一个核心问题 */
-.scene{display:none;position:relative;min-height:calc(100dvh - 140px);padding-top:clamp(40px,6.5vh,80px);padding-bottom:64px}
-.scene.active{display:block}
+/* Scene：一屏一个核心问题；hidden 控制显隐，非当前 Scene 不在 Tab 顺序中 */
+.scene{position:relative;min-height:calc(100dvh - 140px);padding-top:clamp(40px,6.5vh,80px);padding-bottom:64px}
 .scene h1{font-size:clamp(36px,5.4vw,70px);line-height:1.14;letter-spacing:-.02em;max-width:760px;margin:0 0 22px}
-.scene h1 em{font-style:normal;color:var(--red)}
+.scene h1 em{font-style:normal;color:var(--brand-primary)}
 .intro{font-size:17px;line-height:1.8;color:var(--muted);max-width:600px;margin:0}
-.question{position:absolute;right:0;top:clamp(40px,6.5vh,80px);width:226px;color:var(--muted);font-size:13px;line-height:1.7;border-top:2px solid var(--red);padding-top:12px}
+.question{position:absolute;right:0;top:clamp(40px,6.5vh,80px);width:226px;color:var(--muted);font-size:13px;line-height:1.7;border-top:2px solid var(--brand-primary);padding-top:12px}
 .question strong{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
-.foot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;gap:16px;color:var(--muted);font:12px var(--mono)}
-.foot b{color:var(--red);font-weight:400}
+.foot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;gap:16px;color:var(--muted);font:12px var(--sans)}
+.foot b{color:var(--brand-primary);font-weight:400}
 
-/* FLOW：Dot Grid 画布 + 路径 + 节点 */
+/* FLOW：Dot Grid 画布 + 语义关系边 + 节点 */
 .flow-wrap{position:relative;margin-top:44px;max-width:940px;padding:34px 30px 40px}
 .flow-wrap::before{content:"";position:absolute;inset:0;z-index:0;border-radius:var(--r);
-  background-image:radial-gradient(var(--hairline) 1.2px,transparent 1.2px);background-size:24px 24px}
+  background-image:radial-gradient(var(--canvas-dot-color) 1.2px,transparent 1.2px);background-size:var(--canvas-dot-gap) var(--canvas-dot-gap)}
 .flow-line{position:absolute;z-index:0;top:76px;left:9%;right:9%;height:2px;background:var(--line)}
-.flow-line i{display:block;height:100%;width:16%;background:var(--red);transition:width .45s var(--ease)}
+.edge{position:absolute;top:0;height:100%;width:34%;background:transparent;transition:background .3s var(--ease)}
+.edge[data-edge="device:gateway"]{left:16%}
+.edge[data-edge="gateway:platform"]{left:50%}
+.edge.lit{background:var(--brand-primary)}
 .nodes{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 .node{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:20px;text-align:left;cursor:pointer;min-height:148px;
   transition:border-color .16s var(--ease),background .16s var(--ease),transform .16s var(--ease)}
 .node:hover{border-color:#aeb8c0;transform:translateY(-2px)}
-.node.active{border-color:var(--red);background:var(--red-soft);transform:translateY(-3px)}
-.node small{display:block;font:11px var(--mono);letter-spacing:.08em;color:var(--red);margin-bottom:26px}
+.node[aria-pressed="true"]{border-color:var(--brand-primary);background:var(--brand-primary-soft);transform:translateY(-3px)}
+.node small{display:block;font:600 11px var(--sans);letter-spacing:.06em;color:var(--brand-primary);margin-bottom:26px}
 .node strong{display:block;font-size:21px}
 .node span{display:block;margin-top:7px;font-size:13px;color:var(--muted)}
 
@@ -59,36 +62,46 @@ button{font:inherit;color:inherit}
 .callouts{display:grid;gap:4px;margin-top:36px;max-width:640px}
 .callout{border:0;border-top:2px solid var(--line);background:none;text-align:left;padding:14px 10px 14px 2px;cursor:pointer;border-radius:0 0 var(--r) var(--r);
   transition:border-color .16s var(--ease),background .16s var(--ease)}
-.callout:hover{background:var(--canvas)}
-.callout.open{border-top-color:var(--red);background:var(--red-soft)}
+.callout:hover{background:var(--bg)}
+.callout.open{border-top-color:var(--brand-primary);background:var(--brand-primary-soft)}
 .callout b{display:flex;gap:12px;align-items:baseline;font-size:16px;margin-bottom:5px}
-.callout b i{font:400 12px var(--mono);font-style:normal;color:var(--red)}
+.callout b i{font:400 12px var(--sans);font-style:normal;color:var(--brand-primary)}
 .callout .chev{margin-left:auto;font:12px var(--mono);color:#9aa3ab;transition:transform .25s var(--ease)}
-.callout.open .chev{transform:rotate(45deg);color:var(--red)}
+.callout.open .chev{transform:rotate(45deg);color:var(--brand-primary)}
 .callout p{margin:0;font-size:13px;color:var(--muted);line-height:1.7}
 .callout .more{display:block;max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
 .callout .more p{margin-top:10px}
 .callout .more .src{display:block;margin:12px 0 2px;font:11px var(--mono);color:#9aa3ab}
 .callout.open .more{max-height:240px}
 
-/* Drawer：只承载长解释与来源 */
-.scrim{position:fixed;z-index:4;inset:0;background:rgba(29,38,48,.32);opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
-.scrim.open{opacity:1;pointer-events:auto}
-.drawer{position:fixed;z-index:5;right:0;top:0;bottom:0;width:min(460px,100vw);background:var(--surface);
-  border-left:1px solid var(--line);box-shadow:-18px 0 48px rgba(29,38,48,.14);
-  transform:translateX(102%);transition:transform .42s var(--ease);padding:34px 36px;display:flex;flex-direction:column}
-.drawer.open{transform:none}
+/* Drawer：原生 dialog 模态，只承载长解释与来源 */
+.drawer{position:fixed;top:0;right:0;bottom:0;left:auto;margin:0;width:min(460px,100vw);max-width:none;height:100dvh;max-height:none;
+  background:var(--surface);color:inherit;border:0;border-left:1px solid var(--line);box-shadow:-18px 0 48px rgba(29,38,48,.14);
+  padding:34px 36px;transform:translateX(102%);transition:transform .42s var(--ease)}
+.drawer[open]{display:flex;flex-direction:column;transform:none}
+.drawer[open].closing{transform:translateX(102%)}
+@starting-style{.drawer[open]{transform:translateX(102%)}}
+.drawer::backdrop{background:rgba(29,38,48,.32)}
 .drawer-close{align-self:flex-end;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);width:36px;height:36px;cursor:pointer;font-size:16px;line-height:1}
-.drawer-close:hover{border-color:var(--red);color:var(--red)}
-.drawer-kicker{font:11px var(--mono);letter-spacing:.12em;color:var(--red);margin:38px 0 14px}
+.drawer-close:hover{border-color:var(--brand-primary);color:var(--brand-primary)}
+.drawer-kicker{font:600 11px var(--sans);letter-spacing:.06em;color:var(--brand-primary);margin:38px 0 14px}
 .drawer h2{font-size:30px;letter-spacing:-.01em;margin:0 0 18px}
 .drawer p{color:var(--muted);line-height:1.85;margin:0 0 14px}
 .drawer-source{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;font-size:12px;color:var(--muted);line-height:1.7}
 
-.rail button:focus-visible,.node:focus-visible,.callout:focus-visible,.drawer-close:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.rail button:focus-visible,.node:focus-visible,.callout:focus-visible,.drawer-close:focus-visible,.mobile-nav button:focus-visible{outline:2px solid var(--brand-primary);outline-offset:3px}
+
+/* 窄屏 Scene 导航：章节轨道隐藏后的替代入口 */
+.mobile-nav{display:none}
+@media (max-width:640px){
+  .mobile-nav{display:flex;position:fixed;z-index:3;right:16px;bottom:14px;gap:8px}
+  .mobile-nav button{border:1px solid var(--line);border-radius:999px;background:var(--surface);cursor:pointer;
+    padding:8px 16px;font-size:13px;color:var(--ink);box-shadow:0 4px 16px rgba(29,38,48,.12)}
+  .mobile-nav button:disabled{color:#9aa3ab;box-shadow:none;cursor:default}
+}
 
 @media (prefers-reduced-motion:no-preference){
-  .scene.active .rise{animation:rise .45s var(--ease) both;animation-delay:calc(var(--i,0)*70ms)}
+  .scene .rise{animation:rise .45s var(--ease) both;animation-delay:calc(var(--i,0)*70ms)}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -97,7 +110,7 @@ button{font:inherit;color:inherit}
   .deck{grid-template-columns:1fr}
   .rail{display:none}
   .top .brand{height:18px}
-  .top .context{font-size:10px;letter-spacing:.08em}
+  .top .context{font-size:10px;letter-spacing:.05em}
   .main{padding:22px 20px 26px}
   .scene{padding-top:44px}
   .question{position:static;width:auto;margin:30px 0 0}
@@ -125,23 +138,26 @@ button{font:inherit;color:inherit}
     </header>
 
     <!-- SCENE 01 · FLOW：长解释进 Drawer -->
-    <article class="scene active" data-scene="0" aria-labelledby="scene-1-title">
+    <article class="scene" data-scene="0" aria-labelledby="scene-1-title">
       <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>数据如何从设备进入临床平台？</aside>
       <h1 id="scene-1-title" class="rise" style="--i:0">设备数据采集<br><em>从设备，到临床</em></h1>
       <p class="intro rise" style="--i:1">默认只看见一条清楚的路径。点击节点，进入对应环节的解释和来源。</p>
       <div class="flow-wrap rise" style="--i:2">
-        <div class="flow-line" aria-hidden="true"><i></i></div>
+        <div class="flow-line" aria-hidden="true">
+          <i class="edge lit" data-edge="device:gateway"></i>
+          <i class="edge" data-edge="gateway:platform"></i>
+        </div>
         <div class="nodes">
-          <button class="node active" data-node="device" aria-haspopup="dialog"><small>01 / INPUT</small><strong>医疗设备</strong><span>床旁设备产生实时数据</span></button>
-          <button class="node" data-node="gateway" aria-haspopup="dialog"><small>02 / TRANSFORM</small><strong>eGateway</strong><span>协议适配与路由</span></button>
-          <button class="node" data-node="platform" aria-haspopup="dialog"><small>03 / OUTPUT</small><strong>mi-ICU 平台</strong><span>进入临床工作台</span></button>
+          <button class="node" data-node="device" aria-pressed="true" aria-controls="detail-drawer" aria-haspopup="dialog"><small>01 / INPUT</small><strong>医疗设备</strong><span>床旁设备产生实时数据</span></button>
+          <button class="node" data-node="gateway" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><small>02 / TRANSFORM</small><strong>eGateway</strong><span>协议适配与路由</span></button>
+          <button class="node" data-node="platform" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><small>03 / OUTPUT</small><strong>mi-ICU 平台</strong><span>进入临床工作台</span></button>
         </div>
       </div>
       <footer class="foot"><span>长解释与来源进入抽屉</span><b>01 / 02 · FLOW</b></footer>
     </article>
 
     <!-- SCENE 02 · 原地展开：短判断不进抽屉 -->
-    <article class="scene" data-scene="1" aria-labelledby="scene-2-title">
+    <article class="scene" data-scene="1" aria-labelledby="scene-2-title" hidden>
       <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>细节应该在哪一层展开？</aside>
       <h1 id="scene-2-title" class="rise" style="--i:0">短判断，<em>原地展开</em></h1>
       <p class="intro rise" style="--i:1">展开形式由内容决定：一两句判断就地展开，长解释和来源才进抽屉。</p>
@@ -167,22 +183,28 @@ button{font:inherit;color:inherit}
   </section>
 </main>
 
-<div class="scrim" aria-hidden="true"></div>
-<aside class="drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-title" aria-hidden="true">
-  <button class="drawer-close" aria-label="关闭详情">×</button>
+<div class="mobile-nav">
+  <button type="button" data-nav="-1">上一页</button>
+  <button type="button" data-nav="1">下一页</button>
+</div>
+
+<dialog class="drawer" id="detail-drawer" aria-labelledby="drawer-title">
+  <button class="drawer-close" type="button" aria-label="关闭详情">×</button>
   <div class="drawer-kicker" id="drawer-kicker">L2 / DETAIL</div>
   <h2 id="drawer-title"></h2>
   <div id="drawer-body"></div>
   <p class="drawer-source" id="drawer-source"></p>
-</aside>
+</dialog>
 
 <script>
 const scenes=[...document.querySelectorAll('.scene')], sceneButtons=[...document.querySelectorAll('[data-go]')];
 const nodes=[...document.querySelectorAll('.node')];
-const drawer=document.querySelector('.drawer'), scrim=document.querySelector('.scrim');
-const progress=document.querySelector('.flow-line i');
+const edges=[...document.querySelectorAll('.edge')];
+const drawer=document.getElementById('detail-drawer');
+const counter=document.querySelector('.counter');
+const navPrev=document.querySelector('[data-nav="-1"]'), navNext=document.querySelector('[data-nav="1"]');
 const total=String(scenes.length).padStart(2,'0');
-let lastFocus=null;
+let current=0;
 
 const detail={
   device:{kicker:'L2 / DETAIL · 01 INPUT',title:'医疗设备',paras:['监护仪、呼吸机等床旁设备持续产生生命体征与设备状态数据。','它是整条链路的输入端：后续的清洗、路由和展示，都依赖这里的数据质量。'],source:'来源示例：请替换为实际课件文件和页码。当前为模板示例。'},
@@ -191,44 +213,52 @@ const detail={
 };
 
 function go(i){
-  closeDrawer(false);
-  scenes.forEach((s,n)=>s.classList.toggle('active',n===i));
-  sceneButtons.forEach((b,n)=>{b.classList.toggle('active',n===i);b.setAttribute('aria-current',n===i?'page':'false')});
-  document.querySelector('.counter').textContent=String(i+1).padStart(2,'0')+' / '+total;
+  current=Math.max(0,Math.min(scenes.length-1,i));
+  if(drawer.open) drawer.close();
+  scenes.forEach((s,n)=>{s.hidden=n!==current});
+  sceneButtons.forEach((b,n)=>{b.classList.toggle('active',n===current);b.setAttribute('aria-current',n===current?'page':'false')});
+  counter.textContent=String(current+1).padStart(2,'0')+' / '+total;
+  navPrev.disabled=current===0;
+  navNext.disabled=current===scenes.length-1;
+  window.scrollTo(0,0);
 }
 function openNode(key,trigger){
   const d=detail[key]; if(!d) return;
-  lastFocus=trigger;
-  nodes.forEach(n=>n.classList.toggle('active',n===trigger));
-  document.querySelector('#drawer-kicker').textContent=d.kicker;
-  document.querySelector('#drawer-title').textContent=d.title;
-  document.querySelector('#drawer-body').innerHTML=d.paras.map(p=>'<p>'+p+'</p>').join('');
-  document.querySelector('#drawer-source').textContent=d.source;
-  progress.style.width={device:'16%',gateway:'50%',platform:'84%'}[key]||'16%';
-  drawer.classList.add('open'); scrim.classList.add('open');
-  drawer.setAttribute('aria-hidden','false');
+  nodes.forEach(n=>n.setAttribute('aria-pressed',n===trigger?'true':'false'));
+  edges.forEach(e=>e.classList.toggle('lit',e.dataset.edge.split(':').includes(key)));
+  document.getElementById('drawer-kicker').textContent=d.kicker;
+  document.getElementById('drawer-title').textContent=d.title;
+  document.getElementById('drawer-body').innerHTML=d.paras.map(p=>'<p>'+p+'</p>').join('');
+  document.getElementById('drawer-source').textContent=d.source;
+  drawer.showModal();
   drawer.querySelector('.drawer-close').focus();
 }
-function closeDrawer(restore=true){
-  if(!drawer.classList.contains('open')) return;
-  drawer.classList.remove('open'); scrim.classList.remove('open');
-  drawer.setAttribute('aria-hidden','true');
-  if(restore && lastFocus) lastFocus.focus();
+function requestClose(){
+  if(!drawer.open||drawer.classList.contains('closing')) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){drawer.close();return}
+  drawer.classList.add('closing');
+  setTimeout(()=>{drawer.classList.remove('closing');if(drawer.open) drawer.close()},460);
 }
 
 sceneButtons.forEach(b=>b.addEventListener('click',()=>go(Number(b.dataset.go))));
+[navPrev,navNext].forEach(b=>b.addEventListener('click',()=>go(current+Number(b.dataset.nav))));
+navPrev.disabled=true;
 nodes.forEach(n=>n.addEventListener('click',()=>openNode(n.dataset.node,n)));
 document.querySelectorAll('.callout').forEach(c=>c.addEventListener('click',()=>{
   const open=c.classList.toggle('open');
   c.setAttribute('aria-expanded',open?'true':'false');
 }));
-document.querySelector('.drawer-close').addEventListener('click',()=>closeDrawer());
-scrim.addEventListener('click',()=>closeDrawer());
+document.querySelector('.drawer-close').addEventListener('click',requestClose);
+drawer.addEventListener('click',e=>{
+  const r=drawer.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) requestClose();
+});
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeDrawer();return}
-  if(drawer.classList.contains('open')) return;
-  if(e.key==='ArrowRight') go(1);
-  if(e.key==='ArrowLeft') go(0);
+  if(drawer.open) return;
+  const tag=(document.activeElement||{}).tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+  if(e.key==='ArrowRight') go(current+1);
+  if(e.key==='ArrowLeft') go(current-1);
 });
 </script>
 </body>

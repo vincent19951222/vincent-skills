@@ -24,7 +24,7 @@ metadata:
 3. 按 [布局映射](references/layouts.md) 将观点、数字、对比、关系、流程、时间、因果、空间转换为相应视觉，而非先挑一排卡片填文字。
 4. 读取 [视觉基础](references/visual-system.md)。Mindray 继续使用已提供的 Logo、品牌红；底色采用明亮中性色，细节面板采用精密仪器的轻层次。
 5. 读取 [组件](references/components.md)、[交互](references/interactive-deck.md) 与 [动效](references/motion-system.md)。每项交互说明它新增的理解价值；不要求每屏都有 Drawer 或 3D。
-6. 从 [新 Scene 模板](assets/template-interactive.html) 开始，用 [HTML 契约](references/page-contract.md) 保持状态与可访问性。组件预览 `components-preview.html` 是旧版平面组件目录，尚未完整体现新模型；旧 `assets/template-deck.html` 仅作存量参考。
+6. 从 [新 Scene 模板](assets/template-interactive.html) 开始，用 [HTML 契约](references/page-contract.md) 保持状态与可访问性；`assets/demo.html` 是六屏参考实现，展示 Metric、Status Chip、Comparison、SVG 关系图等 demo 级形态。组件预览 `components-preview.html` 是旧版平面组件目录，尚未完整体现新模型；旧 `assets/template-deck.html` 仅作存量参考。
 7. 依 [素材规则](references/assets.md) 复制所需资产到内容项目，保证本地可打开。演示数据明确标记；不把模板文案写成真实产品事实。
 8. 按 [验收清单](references/checklist.md) 和 [验证流程](references/validation.md) 检查静态画面、节点路径联动、返回、键盘、窄屏与减少动效；交付文件和实际验证范围。
 

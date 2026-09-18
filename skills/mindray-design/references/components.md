@@ -2,16 +2,16 @@
 
 先确定要解释什么，再选择组件。原子组件服务于一屏的核心叙事。
 
-实现分两级：`模板` 指 `assets/template-interactive.html` 可直接复制；`demo` 指 mi-ICU 培训演示（内容项目中的 `presentations/demo.html`）已验证的形态，可按需移植。
+实现分两级：`模板` 指 `assets/template-interactive.html` 可直接复制；`demo` 指 `assets/demo.html`（本 skill 内置的六屏参考实现：INDEX / FLOW / SYSTEM / DATA / COMPARE / PRODUCT）中已验证的形态，可按需移植。
 
 | 组件 | 默认信息 | 展开信息 / 交互 | 当前实现 |
 |---|---|---|---|
 | Hero Statement | 观点 + 一句解释 | 进入下一 Scene | 模板 + demo |
-| Device Node | 名称 + 角色 | 选中、关联路径强调、打开详情 | 模板 + demo（demo 含 SVG 关系图连线高亮） |
+| Device Node | 名称 + 角色 | 选中、关联路径强调、打开详情 | 模板 + demo（demo 的 SYSTEM 场景为 SVG 连线高亮） |
 | Detail Drawer | What / Why / How | Evidence 入口；关闭回到触发节点 | 模板 + demo |
 | Inline Expand | 一句判断 | 原地展开解释与来源行 | 模板 + demo |
 | Metric / Telemetry | Label / Value / Unit / Status | 点击展开指标口径解释带 | demo |
-| Status Chip | 文字 + 语义状态点 | 必要时补充原因 | demo（ok / warn / info 三态令牌） |
+| Status Chip | 文字 + 语义状态点 | 必要时补充原因 | demo |
 | Comparison | 同维度 A / B | 差异高亮、状态色对照 | demo |
 | Dot Grid Canvas | 工程画布底层 | 不交互，只承载关系类场景 | 模板 + demo |
 | System Card | 一个子系统及角色 | 进入组成或证据 | 规范，未实现 |
@@ -31,7 +31,7 @@
 
 Default、Hover、Active、Selected、Disabled 各自有意义。可操作节点用 button；选中使用 `aria-pressed`。Hover 微提亮、Active 短反馈，Selected 同步强调数据关系。Disabled 配原因，不装作可点击。
 
-连接线的方向/关系来自材料。不能用随意填充比例冒充拓扑或实时传输。demo 的 SVG 连线坐标按节点位置手写对齐，改动节点数量或文案长度时需同步调整。
+连接线的方向/关系来自材料。不能用随意填充比例冒充拓扑或实时传输。demo 的 SVG 连线使用与节点 `left/top` 百分比一致的 0–100 坐标系（`preserveAspectRatio="none"` + `vector-effect="non-scaling-stroke"`），改动节点位置时同步调整对应 `x/y` 端点。
 
 ## Drawer
 
@@ -45,7 +45,7 @@ Mono 数值、清晰单位、可核实来源。一屏一个主数字，辅助数
 
 ## Status Chip
 
-小尺寸、轻背景、细描边、状态点。状态色独立于品牌红：`--ok:#2c8a57`、`--warn:#b97918`、`--info:#3b6ea5`。芯片是圆角药丸，与节点/卡片的 6px 微圆角属于两套形状规则，不混用。
+小尺寸、轻背景、细描边、状态点。状态色独立于品牌红，统一使用 [visual-system.md](visual-system.md) 的 `--success:#236B46`、`--warning:#805609`、`--info:#215E98`；demo 中的 `ok / warn / info` 修饰类分别对应这三个令牌。芯片是圆角药丸，与节点/卡片的 6px 微圆角属于两套形状规则，不混用。
 
 ## Logo 与课件索引
 

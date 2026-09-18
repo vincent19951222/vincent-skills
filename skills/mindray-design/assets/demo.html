@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mindray Interactive Demo · mi-ICU 培训课件（示例）</title>
+<style>
+:root{
+  --bg:#F5F7F8; --surface:#FFFFFF; --ink:#1D2630; --muted:#586572; --line:#D9E0E5;
+  --brand-primary:#C90000; --brand-primary-soft:#FFF0F0;
+  --success:#236B46; --warning:#805609; --info:#215E98;
+  --canvas-dot-color:rgba(148,163,184,.28); --canvas-dot-gap:24px;
+  --mono:"JetBrains Mono","SFMono-Regular",ui-monospace,Menlo,monospace;
+  --sans:"PingFang SC","Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
+  --r:6px; --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+button{font:inherit;color:inherit}
+.deck{min-height:100dvh;display:grid;grid-template-columns:76px minmax(0,1fr);background:var(--surface)}
+
+/* 章节轨道：纯页码导航，数字用 Mono */
+.rail{border-right:1px solid var(--line);padding:26px 0;display:flex;flex-direction:column;align-items:center;gap:16px}
+.rail button{border:0;background:none;color:#9aa3ab;cursor:pointer;padding:6px;font:12px var(--mono)}
+.rail button.active{color:var(--brand-primary);font-weight:700}
+
+/* 顶栏：品牌 Logo 主位 + 档案语境 + 计数器；文字标签用无衬线，计数器数字用 Mono */
+.main{min-width:0;padding:36px clamp(28px,5vw,80px) 30px;position:relative}
+.top{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.top .brand{height:24px;width:auto;display:block}
+.top .context{font:600 12px var(--sans);letter-spacing:.06em;color:var(--brand-primary)}
+.top .counter{margin-left:auto;font:12px var(--mono);color:var(--muted);white-space:nowrap}
+
+/* Scene：一屏一个核心问题；hidden 控制显隐，非当前 Scene 不在 Tab 顺序中 */
+.scene{position:relative;min-height:calc(100dvh - 140px);padding-top:clamp(36px,5.5vh,68px);padding-bottom:64px}
+.scene h1{font-size:clamp(34px,4.6vw,58px);line-height:1.14;letter-spacing:-.02em;max-width:760px;margin:0 0 20px}
+.scene h1 em{font-style:normal;color:var(--brand-primary)}
+.intro{font-size:17px;line-height:1.8;color:var(--muted);max-width:600px;margin:0}
+.question{position:absolute;right:0;top:clamp(36px,5.5vh,68px);width:226px;color:var(--muted);font-size:13px;line-height:1.7;border-top:2px solid var(--brand-primary);padding-top:12px}
+.question strong{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
+.foot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;gap:16px;color:var(--muted);font:12px var(--sans)}
+.foot b{color:var(--brand-primary);font-weight:400}
+
+/* Dot Grid 工程画布：只承载关系类场景 */
+.dot-canvas{position:relative;margin-top:40px;max-width:940px;padding:34px 30px 40px}
+.dot-canvas::before{content:"";position:absolute;inset:0;z-index:0;border-radius:var(--r);
+  background-image:radial-gradient(var(--canvas-dot-color) 1.2px,transparent 1.2px);background-size:var(--canvas-dot-gap) var(--canvas-dot-gap)}
+
+/* INDEX：观点 + 章节入口；章节号是序列标记，保留 Mono */
+.toc{display:grid;margin-top:44px;max-width:780px;border-top:1px solid var(--line)}
+.toc button{display:flex;gap:22px;align-items:baseline;padding:17px 8px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;transition:background .16s var(--ease)}
+.toc button:hover{background:var(--bg)}
+.toc button i{font:12px var(--mono);font-style:normal;color:var(--brand-primary)}
+.toc button strong{font-size:18px;font-weight:600}
+.toc button span{margin-left:auto;color:var(--muted);font-size:13px;text-align:right}
+
+/* FLOW：路径 + 语义关系边 + 节点 */
+.flow-line{position:absolute;z-index:0;top:76px;left:9%;right:9%;height:2px;background:var(--line)}
+.edge{position:absolute;top:0;height:100%;width:34%;background:transparent;transition:background .3s var(--ease)}
+.edge[data-edge="device:gateway"]{left:16%}
+.edge[data-edge="gateway:platform"]{left:50%}
+.edge.lit{background:var(--brand-primary)}
+.nodes{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.node{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:20px;text-align:left;cursor:pointer;min-height:148px;
+  transition:border-color .16s var(--ease),background .16s var(--ease),transform .16s var(--ease)}
+.node:hover{border-color:#aeb8c0;transform:translateY(-2px)}
+.node[aria-pressed="true"]{border-color:var(--brand-primary);background:var(--brand-primary-soft);transform:translateY(-3px)}
+.node small{display:block;font:600 11px var(--sans);letter-spacing:.06em;color:var(--brand-primary);margin-bottom:26px}
+.node strong{display:block;font-size:21px}
+.node span{display:block;margin-top:7px;font-size:13px;color:var(--muted)}
+
+/* SYSTEM：中枢辐射节点图，SVG 百分比坐标连线与节点定位同步 */
+.sys-graph{position:relative;height:430px}
+.sys-graph svg{position:absolute;inset:0;width:100%;height:100%}
+.sys-graph svg .edge{position:static;width:auto;height:auto;background:none;stroke:var(--line);stroke-width:1.5;vector-effect:non-scaling-stroke;transition:stroke .3s var(--ease)}
+.sys-graph svg .edge.lit{stroke:var(--brand-primary)}
+.sys-node{position:absolute;z-index:1;transform:translate(-50%,-50%);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+  padding:14px 18px;min-width:148px;text-align:center;cursor:pointer;
+  transition:border-color .16s var(--ease),background .16s var(--ease)}
+.sys-node:hover{border-color:#aeb8c0}
+.sys-node[aria-pressed="true"]{border-color:var(--brand-primary);background:var(--brand-primary-soft)}
+.sys-node.hub{border:2px solid var(--brand-primary);padding:18px 24px}
+.sys-node strong{display:block;font-size:17px}
+.sys-node.hub strong{font-size:19px}
+.sys-node span{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
+
+/* DATA：一屏一个主数字，辅助指标降权；点击进指标解释带 */
+.metrics{display:grid;grid-template-columns:minmax(260px,1.1fr) 2fr;gap:26px;margin-top:40px;max-width:940px;align-items:stretch}
+.metric-main{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:26px;text-align:left;cursor:pointer;
+  transition:border-color .16s var(--ease),background .16s var(--ease)}
+.metric-main:hover{border-color:#aeb8c0}
+.metric-main[aria-expanded="true"]{border-color:var(--brand-primary);background:var(--brand-primary-soft)}
+.metric-main .num{display:block;font:56px/1.1 var(--mono);letter-spacing:-.02em;margin:10px 0 4px}
+.metric-main .num small{font-size:22px;color:var(--muted)}
+.metric-main .lbl{font-size:14px;color:var(--muted)}
+.telemetry{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tele{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:18px;text-align:left;cursor:pointer;
+  transition:border-color .16s var(--ease),background .16s var(--ease)}
+.tele:hover{border-color:#aeb8c0}
+.tele[aria-expanded="true"]{border-color:var(--brand-primary);background:var(--brand-primary-soft)}
+.tele .num{display:block;font:30px/1.2 var(--mono)}
+.tele .num small{font-size:13px;color:var(--muted)}
+.tele .lbl{font-size:13px;color:var(--muted)}
+.demo-tag{display:inline-block;margin-top:10px;font:10px var(--sans);letter-spacing:.02em;color:var(--warning);border:1px solid currentColor;border-radius:999px;padding:2px 8px}
+.focus-strip{max-width:940px;margin-top:18px;border-top:2px solid var(--brand-primary);background:var(--surface);
+  padding:16px 20px;font-size:14px;line-height:1.7}
+.focus-strip strong{display:block;font-size:13px;color:var(--brand-primary);margin-bottom:6px}
+.focus-strip p{margin:0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:12px;border:1px solid var(--line);border-radius:999px;
+  background:var(--surface);padding:5px 12px;color:var(--muted)}
+.chip i{width:8px;height:8px;border-radius:50%;font-style:normal}
+.chip.ok i{background:var(--success)}
+.chip.warn i{background:var(--warning)}
+.chip.info i{background:var(--info)}
+
+/* COMPARE：同维度双栏，差异用品牌红 */
+.compare{margin-top:40px;max-width:940px;border-top:1px solid var(--line)}
+.cmp-head,.cmp-row{display:grid;grid-template-columns:150px 1fr 1fr;gap:26px;align-items:baseline}
+.cmp-head{padding:14px 0;color:var(--muted);font-size:13px;border-bottom:1px solid var(--line)}
+.cmp-head .after{color:var(--ink);font-weight:600}
+.cmp-row{padding:18px 0;border-bottom:1px solid var(--line)}
+.cmp-row .lbl{font-weight:600}
+.cmp-row p{margin:0;font-size:15px;line-height:1.7;color:var(--muted)}
+.cmp-row .after p{color:var(--ink)}
+.cmp-row em{font-style:normal;font-weight:700;color:inherit;border-bottom:2px solid transparent;transition:color .25s var(--ease),border-color .25s var(--ease)}
+.compare.show-diff .cmp-row em{color:var(--brand-primary);border-color:var(--brand-primary)}
+.diff-toggle{margin-top:18px;border:1px solid var(--line);border-radius:999px;background:var(--surface);cursor:pointer;
+  padding:7px 16px;font-size:13px;color:var(--muted);transition:border-color .16s var(--ease),color .16s var(--ease)}
+.diff-toggle[aria-pressed="true"]{border-color:var(--brand-primary);color:var(--brand-primary)}
+
+/* PRODUCT：占位截图 + 空间热点说明（热点是位置，不是序列，不编号） */
+.product{display:grid;grid-template-columns:1.35fr 1fr;gap:34px;margin-top:40px;max-width:1000px;align-items:start}
+.shot-frame{aspect-ratio:16/9;border:1.5px dashed #aeb8c0;border-radius:var(--r);background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);text-align:center;padding:20px}
+.shot-frame strong{font-size:15px;color:var(--ink)}
+.shot-frame span{font:11px var(--sans);letter-spacing:.04em}
+.callouts{display:grid;gap:4px}
+.callout{border:0;border-top:2px solid var(--line);background:none;text-align:left;padding:14px 10px 14px 2px;cursor:pointer;border-radius:0 0 var(--r) var(--r);
+  transition:border-color .16s var(--ease),background .16s var(--ease)}
+.callout:hover{background:var(--bg)}
+.callout.open{border-top-color:var(--brand-primary);background:var(--brand-primary-soft)}
+.callout b{display:flex;gap:12px;align-items:baseline;font-size:16px;margin-bottom:5px}
+.callout b i{font:400 12px var(--sans);font-style:normal;color:var(--brand-primary)}
+.callout .chev{margin-left:auto;font:12px var(--mono);color:#9aa3ab;transition:transform .25s var(--ease)}
+.callout.open .chev{transform:rotate(45deg);color:var(--brand-primary)}
+.callout p{margin:0;font-size:13px;color:var(--muted);line-height:1.7}
+.callout .more{display:block;max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+.callout .more p{margin-top:10px}
+.callout .more .src{display:block;margin:12px 0 2px;font:11px var(--mono);color:#9aa3ab}
+.callout.open .more{max-height:240px}
+
+/* Drawer：原生 dialog 模态，只承载长解释与来源 */
+.drawer{position:fixed;top:0;right:0;bottom:0;left:auto;margin:0;width:min(460px,100vw);max-width:none;height:100dvh;max-height:none;
+  background:var(--surface);color:inherit;border:0;border-left:1px solid var(--line);box-shadow:-18px 0 48px rgba(29,38,48,.14);
+  padding:34px 36px;transform:translateX(102%);transition:transform .42s var(--ease)}
+.drawer[open]{display:flex;flex-direction:column;transform:none}
+.drawer[open].closing{transform:translateX(102%)}
+@starting-style{.drawer[open]{transform:translateX(102%)}}
+.drawer::backdrop{background:rgba(29,38,48,.32)}
+.drawer-close{align-self:flex-end;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);width:36px;height:36px;cursor:pointer;font-size:16px;line-height:1}
+.drawer-close:hover{border-color:var(--brand-primary);color:var(--brand-primary)}
+.drawer-kicker{font:600 11px var(--sans);letter-spacing:.06em;color:var(--brand-primary);margin:38px 0 14px}
+.drawer h2{font-size:30px;letter-spacing:-.01em;margin:0 0 18px}
+.drawer p{color:var(--muted);line-height:1.85;margin:0 0 14px}
+.drawer-source{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;font-size:12px;color:var(--muted);line-height:1.7}
+
+.rail button:focus-visible,.node:focus-visible,.sys-node:focus-visible,.callout:focus-visible,.drawer-close:focus-visible,
+.toc button:focus-visible,.metric-main:focus-visible,.tele:focus-visible,.diff-toggle:focus-visible,.mobile-nav button:focus-visible{outline:2px solid var(--brand-primary);outline-offset:3px}
+
+/* 窄屏 Scene 导航：章节轨道隐藏后的替代入口 */
+.mobile-nav{display:none}
+@media (max-width:640px){
+  .mobile-nav{display:flex;position:fixed;z-index:3;right:16px;bottom:14px;gap:8px}
+  .mobile-nav button{border:1px solid var(--line);border-radius:999px;background:var(--surface);cursor:pointer;
+    padding:8px 16px;font-size:13px;color:var(--ink);box-shadow:0 4px 16px rgba(29,38,48,.12)}
+  .mobile-nav button:disabled{color:#9aa3ab;box-shadow:none;cursor:default}
+}
+
+@media (prefers-reduced-motion:no-preference){
+  .scene .rise{animation:rise .45s var(--ease) both;animation-delay:calc(var(--i,0)*70ms)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+@media (max-width:640px){
+  .deck{grid-template-columns:1fr}
+  .rail{display:none}
+  .top .brand{height:18px}
+  .top .context{font-size:10px;letter-spacing:.05em}
+  .main{padding:22px 20px 26px}
+  .scene{padding-top:40px}
+  .question{position:static;width:auto;margin:28px 0 0}
+  .dot-canvas{margin-top:30px;padding:0}
+  .dot-canvas::before,.flow-line{display:none}
+  .nodes{grid-template-columns:1fr;gap:12px}
+  .node{min-height:0}
+  .sys-graph{height:auto;display:grid;gap:12px}
+  .sys-graph svg{display:none}
+  .sys-node{position:static;transform:none;min-width:0}
+  .metrics{grid-template-columns:1fr}
+  .telemetry{grid-template-columns:1fr}
+  .cmp-head,.cmp-row{grid-template-columns:1fr;gap:8px}
+  .cmp-head .before-lbl{display:none}
+  .product{grid-template-columns:1fr}
+  .foot{position:static;margin-top:36px}
+  .drawer{padding:26px 24px}
+}
+</style>
+</head>
+<body>
+<main class="deck" aria-label="Mindray Interactive Demo">
+  <nav class="rail" aria-label="Scene navigation">
+    <button class="active" data-go="0" aria-current="page">01</button>
+    <button data-go="1">02</button>
+    <button data-go="2">03</button>
+    <button data-go="3">04</button>
+    <button data-go="4">05</button>
+    <button data-go="5">06</button>
+  </nav>
+
+  <section class="main">
+    <header class="top">
+      <img class="brand" src="mindray-lockup-wide.png" alt="mindray 迈瑞">
+      <span class="context">MI-ICU / TRAINING ARCHIVE · DEMO</span>
+      <span class="counter" aria-live="polite">01 / 06</span>
+    </header>
+
+    <!-- SCENE 01 · INDEX：观点 + 章节入口 -->
+    <article class="scene" data-scene="0" aria-labelledby="scene-1-title">
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>这份课件要讲什么、按什么顺序讲？</aside>
+      <h1 id="scene-1-title" class="rise" style="--i:0">数据从设备到临床，<br>只经过三步。</h1>
+      <p class="intro rise" style="--i:1">这份课件沿一条数据链路讲清 mi-ICU：先看链路，再看平台组成、数据可信度、集成前后的差异，最后落到界面怎么读。</p>
+      <div class="toc rise" style="--i:2">
+        <button data-go="1"><i>02</i><strong>链路</strong><span>数据如何从设备进入临床平台？</span></button>
+        <button data-go="2"><i>03</i><strong>组成</strong><span>mi-ICU 平台由什么组成？</span></button>
+        <button data-go="3"><i>04</i><strong>数据</strong><span>床旁数据是否可信？</span></button>
+        <button data-go="4"><i>05</i><strong>对比</strong><span>集成前后差在哪里？</span></button>
+        <button data-go="5"><i>06</i><strong>界面</strong><span>界面上先看哪里？</span></button>
+      </div>
+      <footer class="foot"><span>章节入口即真实导航</span><b>01 / 06 · INDEX</b></footer>
+    </article>
+
+    <!-- SCENE 02 · FLOW：节点 + 路径高亮 + Drawer -->
+    <article class="scene" data-scene="1" aria-labelledby="scene-2-title" hidden>
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>数据如何从设备进入临床平台？</aside>
+      <h1 id="scene-2-title" class="rise" style="--i:0">设备数据采集<br><em>从设备，到临床</em></h1>
+      <p class="intro rise" style="--i:1">默认只看见一条清楚的路径。点击节点，进入对应环节的解释和来源。</p>
+      <div class="dot-canvas rise" style="--i:2">
+        <div class="flow-line" aria-hidden="true">
+          <i class="edge lit" data-edge="device:gateway"></i>
+          <i class="edge" data-edge="gateway:platform"></i>
+        </div>
+        <div class="nodes">
+          <button class="node" data-node="device" aria-pressed="true" aria-controls="detail-drawer" aria-haspopup="dialog"><small>01 / INPUT</small><strong>医疗设备</strong><span>床旁设备产生实时数据</span></button>
+          <button class="node" data-node="gateway" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><small>02 / TRANSFORM</small><strong>eGateway</strong><span>协议适配与路由</span></button>
+          <button class="node" data-node="platform" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><small>03 / OUTPUT</small><strong>mi-ICU 平台</strong><span>进入临床工作台</span></button>
+        </div>
+      </div>
+      <footer class="foot"><span>长解释与来源进入抽屉</span><b>02 / 06 · FLOW</b></footer>
+    </article>
+
+    <!-- SCENE 03 · SYSTEM：中枢辐射节点图，SVG 连线高亮 -->
+    <article class="scene" data-scene="2" aria-labelledby="scene-3-title" hidden>
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>mi-ICU 平台由什么组成？</aside>
+      <h1 id="scene-3-title" class="rise" style="--i:0">一个平台，<em>四类能力</em></h1>
+      <p class="intro rise" style="--i:1">点击任一模块，看清它和平台的关系，以及它负责什么。</p>
+      <div class="dot-canvas rise" style="--i:2">
+        <div class="sys-graph">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <line class="edge" data-edge="hub:monitor" x1="50" y1="50" x2="17" y2="20"/>
+            <line class="edge" data-edge="hub:station" x1="50" y1="50" x2="83" y2="20"/>
+            <line class="edge" data-edge="hub:data" x1="50" y1="50" x2="17" y2="80"/>
+            <line class="edge" data-edge="hub:alarm" x1="50" y1="50" x2="83" y2="80"/>
+          </svg>
+          <button class="sys-node hub" data-node="hub" style="left:50%;top:50%" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><strong>mi-ICU 平台</strong><span>汇总与分发</span></button>
+          <button class="sys-node" data-node="monitor" style="left:17%;top:20%" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><strong>中央监护</strong><span>波形与报警集中显示</span></button>
+          <button class="sys-node" data-node="station" style="left:83%;top:20%" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><strong>临床工作站</strong><span>记录与文书</span></button>
+          <button class="sys-node" data-node="data" style="left:17%;top:80%" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><strong>数据服务</strong><span>存储与接口</span></button>
+          <button class="sys-node" data-node="alarm" style="left:83%;top:80%" aria-pressed="false" aria-controls="detail-drawer" aria-haspopup="dialog"><strong>报警管理</strong><span>规则与分级分发</span></button>
+        </div>
+      </div>
+      <footer class="foot"><span>节点选中同步突出关联边</span><b>03 / 06 · SYSTEM</b></footer>
+    </article>
+
+    <!-- SCENE 04 · DATA：主指标 + Telemetry + Status Chip + 指标解释带 -->
+    <article class="scene" data-scene="3" aria-labelledby="scene-4-title" hidden>
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>床旁数据是否可信？</aside>
+      <h1 id="scene-4-title" class="rise" style="--i:0">先看状态，<em>再看数值</em></h1>
+      <p class="intro rise" style="--i:1">数值只有在设备在线、链路正常时才有临床意义。点击任一指标，查看口径与排查顺序。</p>
+      <div class="metrics rise" style="--i:2">
+        <button class="metric-main" data-metric="online" aria-expanded="false" aria-controls="metric-strip">
+          <span class="lbl">在线设备</span>
+          <span class="num">24<small> / 26</small></span>
+          <span class="lbl">2 台离线，数据不参与临床判断</span>
+          <span class="demo-tag">示例数据</span>
+        </button>
+        <div class="telemetry">
+          <button class="tele" data-metric="hr" aria-expanded="false" aria-controls="metric-strip">
+            <span class="lbl">HR 心率</span>
+            <span class="num">78<small> bpm</small></span>
+            <span class="demo-tag">示例数据</span>
+          </button>
+          <button class="tele" data-metric="spo2" aria-expanded="false" aria-controls="metric-strip">
+            <span class="lbl">SpO₂ 血氧</span>
+            <span class="num">98<small> %</small></span>
+            <span class="demo-tag">示例数据</span>
+          </button>
+          <button class="tele" data-metric="nibp" aria-expanded="false" aria-controls="metric-strip">
+            <span class="lbl">NIBP 无创血压</span>
+            <span class="num">118/76<small> mmHg</small></span>
+            <span class="demo-tag">示例数据</span>
+          </button>
+        </div>
+      </div>
+      <div class="focus-strip" id="metric-strip" hidden>
+        <strong id="strip-title"></strong>
+        <p id="strip-body"></p>
+      </div>
+      <div class="chips rise" style="--i:3">
+        <span class="chip ok"><i></i>中央监护 · 正常</span>
+        <span class="chip warn"><i></i>eGateway · 告警待确认</span>
+        <span class="chip info"><i></i>呼吸机 · 离线已标注</span>
+      </div>
+      <footer class="foot"><span>数值与状态均为演示所用，不构成真实患者数据</span><b>04 / 06 · DATA</b></footer>
+    </article>
+
+    <!-- SCENE 05 · COMPARE：同维度前后对比，差异高亮可开关 -->
+    <article class="scene" data-scene="4" aria-labelledby="scene-5-title" hidden>
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>集成前后差在哪里？</aside>
+      <h1 id="scene-5-title" class="rise" style="--i:0">改变发生在<em>三个环节</em></h1>
+      <p class="intro rise" style="--i:1">同一件事情，前后各怎么说。差异词用品牌红标出，可以关掉高亮只看事实。</p>
+      <div class="compare show-diff rise" style="--i:2" id="compare">
+        <div class="cmp-head"><span></span><span class="before-lbl">集成前</span><span class="after">mi-ICU 集成后</span></div>
+        <div class="cmp-row">
+          <span class="lbl">数据录入</span>
+          <p>手工抄录到护理单，约每 2 小时一次</p>
+          <p>设备数据<em>自动采集</em>，<em>实时</em>入库</p>
+        </div>
+        <div class="cmp-row">
+          <span class="lbl">报警响应</span>
+          <p>床旁单机报警，依赖护士巡视发现</p>
+          <p>集中报警，<em>按规则分级</em>分发到工作站</p>
+        </div>
+        <div class="cmp-row">
+          <span class="lbl">夜间查房</span>
+          <p>逐床查看，全覆盖才能安心</p>
+          <p><em>异常优先</em>列表，先看需要处理的床</p>
+        </div>
+      </div>
+      <button class="diff-toggle rise" style="--i:3" aria-pressed="true">突出差异 · 开</button>
+      <footer class="foot"><span>对比内容为培训示例，替换为真实调研结论后交付</span><b>05 / 06 · COMPARE</b></footer>
+    </article>
+
+    <!-- SCENE 06 · PRODUCT：占位截图 + 空间热点 Inline Expand -->
+    <article class="scene" data-scene="5" aria-labelledby="scene-6-title" hidden>
+      <aside class="question rise" style="--i:3"><strong>这一屏回答什么？</strong>界面上先看哪里？</aside>
+      <h1 id="scene-6-title" class="rise" style="--i:0">界面上的<em>阅读顺序</em></h1>
+      <p class="intro rise" style="--i:1">截图替换为真实界面后，热点按位置对应说明。展开看每个区域为什么重要。</p>
+      <div class="product rise" style="--i:2">
+        <div class="shot-frame" role="img" aria-label="界面截图占位，待替换为真实 mi-ICU 界面">
+          <strong>待替换素材 / source required</strong>
+          <span>放入真实 mi-ICU 界面截图 · 16:9</span>
+        </div>
+        <div class="callouts">
+          <button class="callout" aria-expanded="false">
+            <b><i>左上</i>报警区<span class="chev">+</span></b>
+            <p>未确认报警排在最前，先清报警再看别的。</p>
+            <span class="more"><p>报警按确认状态和时间排序，未确认项固定在顶部。阅读界面时这是第一落点，因为它直接对应「现在需要处理什么」。</p><span class="src">来源示例：替换为实际课件文件与页码</span></span>
+          </button>
+          <button class="callout" aria-expanded="false">
+            <b><i>中部</i>趋势区<span class="chev">+</span></b>
+            <p>趋势比瞬时值更能说明方向。</p>
+            <span class="more"><p>波形与趋势曲线回答的是「在变好还是变坏」。瞬时值会波动，趋势才是判断依据，讲解时引导学员先看斜率再看读数。</p><span class="src">来源示例：替换为实际课件文件与页码</span></span>
+          </button>
+          <button class="callout" aria-expanded="false">
+            <b><i>右下</i>操作区<span class="chev">+</span></b>
+            <p>每个界面说明都以「用户接下来做什么」收尾。</p>
+            <span class="more"><p>确认报警、记录事件、调整参数都从这里进入。信息的终点是动作：看完界面要知道下一步点哪里。</p><span class="src">来源示例：替换为实际课件文件与页码</span></span>
+          </button>
+        </div>
+      </div>
+      <footer class="foot"><span>占位素材不得以完成态交付</span><b>06 / 06 · PRODUCT</b></footer>
+    </article>
+  </section>
+</main>
+
+<div class="mobile-nav">
+  <button type="button" data-nav="-1">上一页</button>
+  <button type="button" data-nav="1">下一页</button>
+</div>
+
+<dialog class="drawer" id="detail-drawer" aria-labelledby="drawer-title">
+  <button class="drawer-close" type="button" aria-label="关闭详情">×</button>
+  <div class="drawer-kicker" id="drawer-kicker">L2 / DETAIL</div>
+  <h2 id="drawer-title"></h2>
+  <div id="drawer-body"></div>
+  <p class="drawer-source" id="drawer-source"></p>
+</dialog>
+
+<script>
+const scenes=[...document.querySelectorAll('.scene')];
+const railButtons=[...document.querySelectorAll('.rail [data-go]')];
+const navButtons=[...document.querySelectorAll('[data-go]')];
+const nodes=[...document.querySelectorAll('[data-node]')];
+const edges=[...document.querySelectorAll('.edge')];
+const drawer=document.getElementById('detail-drawer');
+const counter=document.querySelector('.counter');
+const navPrev=document.querySelector('[data-nav="-1"]'), navNext=document.querySelector('[data-nav="1"]');
+const total=String(scenes.length).padStart(2,'0');
+let current=0;
+
+const detail={
+  device:{kicker:'L2 / DETAIL · INPUT',title:'医疗设备',paras:['监护仪、呼吸机等床旁设备持续产生生命体征与设备状态数据。','它是整条链路的输入端：后续的清洗、路由和展示，都依赖这里的数据质量。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  gateway:{kicker:'L2 / DETAIL · TRANSFORM',title:'eGateway',paras:['eGateway 负责协议适配、数据清洗和初步路由。','它把不同厂商、不同协议的数据统一成平台可用的格式，是链路中最容易出问题的环节。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  platform:{kicker:'L2 / DETAIL · OUTPUT',title:'mi-ICU 平台',paras:['数据进入 mi-ICU 平台后，供临床工作站和业务模块使用。','记录、报警和决策支持都建立在前面两步的准确性之上。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  hub:{kicker:'L2 / DETAIL · PLATFORM',title:'mi-ICU 平台',paras:['平台是中枢：四个模块都从它取数，也把结果写回它。','讲解时先建立「平台在中、能力在外」的画面，再逐个展开模块。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  monitor:{kicker:'L2 / DETAIL · MODULE',title:'中央监护',paras:['集中显示所有床旁的波形、数值和报警状态。','它回答的是「全病区现在怎么样」，是护士站的默认画面。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  station:{kicker:'L2 / DETAIL · MODULE',title:'临床工作站',paras:['记录、文书和医嘱处理在工作站完成。','数据已经由平台整理好，医护的工作是确认和补充，而不是重新录入。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  data:{kicker:'L2 / DETAIL · MODULE',title:'数据服务',paras:['负责存储、归档和对外接口，是平台与院内其他系统的边界。','对接 HIS、EMR 时从这里出去，讲解接口问题时先定位到这一层。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'},
+  alarm:{kicker:'L2 / DETAIL · MODULE',title:'报警管理',paras:['报警规则、分级和分发策略在这里配置。','报警疲劳通常不是设备问题，而是规则问题，排查从这一层开始。'],source:'来源示例：请替换为实际课件文件和页码。当前为演示示例。'}
+};
+
+const metricInfo={
+  online:{t:'口径 · 在线设备',b:'已建立数据连接的设备数 ÷ 已注册设备数。排查顺序：网络连接 → eGateway 状态 → 设备数据端口。离线设备的数据不参与临床判断。'},
+  hr:{t:'口径 · HR 心率',b:'来源于监护仪心电模块，单位为 bpm。示例数值仅用于演示指标形态，讲解时替换为真实脱敏数据并标注采集时间。'},
+  spo2:{t:'口径 · SpO₂ 血氧',b:'来源于脉氧模块，单位为 %。信号弱时数值不可信，先看波形质量再读数。示例数值仅用于演示。'},
+  nibp:{t:'口径 · NIBP 无创血压',b:'收缩压 / 舒张压，单位为 mmHg，按测量周期更新。注意它不是连续值，趋势解读要考虑测量间隔。示例数值仅用于演示。'}
+};
+
+function go(i){
+  current=Math.max(0,Math.min(scenes.length-1,i));
+  if(drawer.open) drawer.close();
+  scenes.forEach((s,n)=>{s.hidden=n!==current});
+  railButtons.forEach((b,n)=>{b.classList.toggle('active',n===current);b.setAttribute('aria-current',n===current?'page':'false')});
+  counter.textContent=String(current+1).padStart(2,'0')+' / '+total;
+  navPrev.disabled=current===0;
+  navNext.disabled=current===scenes.length-1;
+  window.scrollTo(0,0);
+}
+function openNode(key,trigger){
+  const d=detail[key]; if(!d) return;
+  const scope=trigger.closest('.scene');
+  scope.querySelectorAll('[data-node]').forEach(n=>n.setAttribute('aria-pressed',n===trigger?'true':'false'));
+  scope.querySelectorAll('.edge').forEach(e=>e.classList.toggle('lit',e.dataset.edge.split(':').includes(key)));
+  document.getElementById('drawer-kicker').textContent=d.kicker;
+  document.getElementById('drawer-title').textContent=d.title;
+  document.getElementById('drawer-body').innerHTML=d.paras.map(p=>'<p>'+p+'</p>').join('');
+  document.getElementById('drawer-source').textContent=d.source;
+  drawer.showModal();
+  drawer.querySelector('.drawer-close').focus();
+}
+function requestClose(){
+  if(!drawer.open||drawer.classList.contains('closing')) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){drawer.close();return}
+  drawer.classList.add('closing');
+  setTimeout(()=>{drawer.classList.remove('closing');if(drawer.open) drawer.close()},460);
+}
+
+navButtons.forEach(b=>b.addEventListener('click',()=>go(Number(b.dataset.go))));
+[navPrev,navNext].forEach(b=>b.addEventListener('click',()=>go(current+Number(b.dataset.nav))));
+navPrev.disabled=true;
+nodes.forEach(n=>n.addEventListener('click',()=>openNode(n.dataset.node,n)));
+
+/* 指标解释带：不离开数据语境的 L2 */
+const strip=document.getElementById('metric-strip');
+const metricButtons=[...document.querySelectorAll('[data-metric]')];
+let openMetric=null;
+metricButtons.forEach(b=>b.addEventListener('click',()=>{
+  const k=b.dataset.metric;
+  if(openMetric===k){strip.hidden=true;openMetric=null;b.setAttribute('aria-expanded','false');return}
+  openMetric=k;
+  metricButtons.forEach(x=>x.setAttribute('aria-expanded',x===b?'true':'false'));
+  document.getElementById('strip-title').textContent=metricInfo[k].t;
+  document.getElementById('strip-body').textContent=metricInfo[k].b;
+  strip.hidden=false;
+}));
+
+/* 对比差异高亮开关 */
+const compare=document.getElementById('compare');
+const diffToggle=document.querySelector('.diff-toggle');
+diffToggle.addEventListener('click',()=>{
+  const on=compare.classList.toggle('show-diff');
+  diffToggle.setAttribute('aria-pressed',on?'true':'false');
+  diffToggle.textContent=on?'突出差异 · 开':'突出差异 · 关';
+});
+
+document.querySelectorAll('.callout').forEach(c=>c.addEventListener('click',()=>{
+  const open=c.classList.toggle('open');
+  c.setAttribute('aria-expanded',open?'true':'false');
+}));
+document.querySelector('.drawer-close').addEventListener('click',requestClose);
+drawer.addEventListener('click',e=>{
+  const r=drawer.getBoundingClientRect();
+  if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) requestClose();
+});
+document.addEventListener('keydown',e=>{
+  if(drawer.open) return;
+  const tag=(document.activeElement||{}).tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+  if(e.key==='ArrowRight') go(current+1);
+  if(e.key==='ArrowLeft') go(current-1);
+});
+</script>
+</body>
+</html>

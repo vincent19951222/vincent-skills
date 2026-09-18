@@ -4,6 +4,7 @@
 
 - `.scene[data-scene]`：Scene 容器，用 hidden 控制非当前内容，标题具有稳定 id。
 - `button[data-go]`：导航，只选择按钮，不把 Scene 容器也作为导航绑定。
+- `button[data-nav]`：窄屏（≤640px）章节轨道的替代导航，值为 ±1 步进；边界页置 `disabled`，桌面端隐藏。
 - `button[data-node]`：选择节点，`aria-pressed` 表达选择状态，`aria-controls` 指向详情。
 - `dialog#detail-drawer`：原生模态抽屉，showModal/close 管理可访问性；保存并恢复触发点焦点。
 - `.edge[data-edge]`：有语义的关系边；选择节点后只强调它关联的边。
